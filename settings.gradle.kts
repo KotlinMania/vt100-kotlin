@@ -17,4 +17,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "vt100-kotlin"
-
