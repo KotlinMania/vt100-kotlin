@@ -17,25 +17,13 @@ name: "CodeQL Advanced"
 # for that language:
 #
 #   1. JDK + Gradle setup (the other two languages need no toolchain).
-#   2. A `./gradlew setupAndroidSdk compileAndroidMain compileKotlinJs
-#      compileKotlinWasmJs` invocation under the CodeQL build tracer.
+#   2. A `./gradlew setupAndroidSdk codeqlCompileJvm` invocation under the
+#      CodeQL Java agent.
 #
-# This is a strict-KMP project with no JVM target, so the autobuild
-# default for java-kotlin (`./gradlew testClasses`) has no task to run
-# and `build-mode: none` extracts nothing. The
-# `com.android.kotlin.multiplatform.library` plugin, however, runs the
-# JVM `kotlinc` for the android target and emits real `.class` files
-# under `build/classes/kotlin/android/main` -- exactly what the
-# extractor's LD_PRELOAD tracer (installed by `Initialize CodeQL`)
-# hooks. `compileAndroidMain` therefore carries the java-kotlin
-# analysis; `compileKotlinJs`/`compileKotlinWasmJs` are added on the
-# chance the tracer also matches the JS/WASM `kotlinc` execs.
-# `--rerun-tasks --no-build-cache` defeat Gradle's up-to-date check so
-# kotlinc actually runs; `-Pkotlin.compiler.execution.strategy=out-of-process`
-# plus `--no-configuration-cache --no-daemon` force a fresh traceable
-# `kotlinc` exec per compilation. That is why this file uses
-# `build-mode: manual` for java-kotlin even though autobuild is the
-# template default.
+# The custom `codeqlCompileJvm` task compiles common and Android Kotlin source
+# with the embeddable JVM compiler and the classpath shape CodeQL expects.
+# The CodeQL Java agent is attached through `JAVA_TOOL_OPTIONS`, so the
+# `K2JVMCompiler` execution emits Kotlin trap files for the analysis database.
 
 on:
   schedule:
@@ -97,25 +85,16 @@ jobs:
           # off the init step on warm cache.
           dependency-caching: true
 
-      # Manual build: only java-kotlin gates this. `Initialize CodeQL`
-      # above installs the LD_PRELOAD build tracer into the environment;
-      # the Gradle invocation below runs the android (and JS/WASM)
-      # `kotlinc` compilers as fresh out-of-process execs that the
-      # tracer intercepts, writing per-source `*.kt.trap.gz` extractor
-      # output under ${CODEQL_EXTRACTOR_JAVA_TRAP_DIR}.
+      # Manual build: only java-kotlin gates this. The CodeQL Java agent is
+      # attached to every JVM in this step through JAVA_TOOL_OPTIONS; every
+      # conforming JVM honors -javaagent at startup independently of any
+      # OS-level LD_PRELOAD tracing chain.
       - name: Run manual build steps
         if: matrix.build-mode == 'manual'
         run: |
-          ./gradlew \
-            setupAndroidSdk \
-            compileAndroidMain \
-            compileKotlinJs \
-            compileKotlinWasmJs \
-            --rerun-tasks \
-            --no-build-cache \
-            -Pkotlin.compiler.execution.strategy=out-of-process \
-            --no-configuration-cache \
-            --no-daemon
+          export JAVA_TOOL_OPTIONS="-javaagent:${CODEQL_EXTRACTOR_JAVA_ROOT}/tools/codeql-java-agent.jar=java,kotlin"
+          echo "JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}"
+          ./gradlew --no-daemon setupAndroidSdk codeqlCompileJvm --no-configuration-cache
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

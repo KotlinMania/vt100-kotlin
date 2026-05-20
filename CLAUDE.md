@@ -94,9 +94,14 @@ For files that have no single Rust counterpart (re-homed from a `mod.rs`, or pur
 ./gradlew test
 ```
 
-Targets: macOS arm64/x64, Linux x64, mingw-x64, iOS arm64/x64/simulator-arm64, JS, Wasm-JS, Android.
+Targets follow the normalized kotlinmania template: macOS arm64; iOS
+arm64/x64/simulator-arm64; tvOS arm64/simulator-arm64; watchOS
+arm32/arm64/device-arm64/simulator-arm64; Linux x64/arm64; mingw-x64; Android
+Native arm32/arm64/x86/x64; JS browser/Node; Wasm-JS browser/Node; Wasm-WASI
+Node; Swift export and the Vt100 XCFramework; Android KMP library; and JVM.
 
-There is no JVM-only target. `./gradlew jvmTest` is **not** valid.
+The JVM target is a publication and test surface. It is not permission to use
+JVM-only imports in common/product source.
 
 ## Forbidden
 
