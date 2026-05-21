@@ -34,12 +34,18 @@ dependencies {
 ### Targets
 
 - macOS arm64
-- Linux x64
+- Linux x64 / arm64
 - Windows mingw-x64
-- iOS arm64 / simulator-arm64 (Swift export + XCFramework)
+- iOS arm64 / x64 / simulator-arm64
+- tvOS arm64 / simulator-arm64
+- watchOS arm32 / arm64 / device-arm64 / simulator-arm64
+- Android Native arm32 / arm64 / x86 / x64
 - JS (browser + Node.js)
 - Wasm-JS (browser + Node.js)
+- Wasm-WASI (Node.js)
 - Android (API 24+)
+- JVM
+- Swift export + Vt100 XCFramework
 
 ### Porting guidelines
 
