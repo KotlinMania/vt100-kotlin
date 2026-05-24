@@ -13,12 +13,11 @@ private const val LEN_BITS: Int = 0b0001_1111
 /**
  * Represents a single terminal cell.
  *
- * The upstream Rust struct packs UTF-8 bytes, a length+flag byte, and the
- * [Attrs] together so the type occupies exactly 32 bytes
- * (`static_assert(sizeof<Cell>() == 32)`). Kotlin does not provide
- * fixed-size inline arrays, so the equivalent layout is approximated with a
- * [ByteArray] sized to [CONTENT_BYTES] plus a packed [Int] length/flag field
- * matching the upstream bit layout.
+ * The upstream implementation packs UTF-8 bytes, a length+flag byte, and the
+ * [Attrs] together so the value occupies exactly 32 bytes. Kotlin does not
+ * provide fixed-size inline arrays, so the equivalent layout is approximated
+ * with a [ByteArray] sized to [CONTENT_BYTES] plus a packed [Int] length/flag
+ * field matching the upstream bit layout.
  */
 public class Cell internal constructor() {
     private val contents: ByteArray = ByteArray(CONTENT_BYTES)
@@ -51,8 +50,8 @@ public class Cell internal constructor() {
         appendChar(len(), c)
     }
 
-    // Writes bytes representing c at start
-    // Requires caller to verify start <= CODEPOINTS_IN_CELL * 4
+    // Writes the UTF-8 bytes for c starting at the provided byte offset.
+    // The caller verifies there is room for the largest supported code point.
     private fun appendChar(start: Int, c: Int) {
         val encoded = codePointToUtf8(c)
         for (i in encoded.indices) {
@@ -170,8 +169,8 @@ public class Cell internal constructor() {
     }
 }
 
-// Encodes a Unicode scalar value into UTF-8 bytes. Mirrors `char::encode_utf8`
-// in upstream Rust, which writes between one and four bytes per code point.
+// Encodes a Unicode scalar value into UTF-8 bytes. The upstream helper writes
+// between one and four bytes per code point.
 private fun codePointToUtf8(c: Int): ByteArray = when {
     c < 0x80 -> byteArrayOf(c.toByte())
     c < 0x800 -> byteArrayOf(

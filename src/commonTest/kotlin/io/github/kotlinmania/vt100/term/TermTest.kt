@@ -19,7 +19,7 @@ private fun bytes(vararg values: Int): ByteArray = ByteArray(values.size) { valu
 
 class TermTest {
     @Test
-    fun clearScreen_writesEscSequence() {
+    fun clearScreenWritesEscSequence() {
         assertEquals(
             bytes(0x1B, '['.code, 'H'.code, 0x1B, '['.code, 'J'.code).toList(),
             writeOf(ClearScreen()).toList(),
@@ -27,7 +27,7 @@ class TermTest {
     }
 
     @Test
-    fun clearRowForward_writesEscK() {
+    fun clearRowForwardWritesEscK() {
         assertEquals(
             bytes(0x1B, '['.code, 'K'.code).toList(),
             writeOf(ClearRowForward()).toList(),
@@ -35,27 +35,27 @@ class TermTest {
     }
 
     @Test
-    fun crlf_writesCrLf() {
+    fun crlfWritesCrLf() {
         assertEquals(byteArrayOf(0x0D, 0x0A).toList(), writeOf(Crlf()).toList())
     }
 
     @Test
-    fun backspace_writesSingleByte() {
+    fun backspaceWritesSingleByte() {
         assertEquals(byteArrayOf(0x08).toList(), writeOf(Backspace()).toList())
     }
 
     @Test
-    fun saveCursor_writesEsc7() {
+    fun saveCursorWritesEsc7() {
         assertEquals(bytes(0x1B, '7'.code).toList(), writeOf(SaveCursor()).toList())
     }
 
     @Test
-    fun restoreCursor_writesEsc8() {
+    fun restoreCursorWritesEsc8() {
         assertEquals(bytes(0x1B, '8'.code).toList(), writeOf(RestoreCursor()).toList())
     }
 
     @Test
-    fun moveTo_home_writesShortForm() {
+    fun moveToHomeWritesShortForm() {
         assertEquals(
             bytes(0x1B, '['.code, 'H'.code).toList(),
             writeOf(MoveTo(Pos(0, 0))).toList(),
@@ -63,7 +63,7 @@ class TermTest {
     }
 
     @Test
-    fun moveTo_nonHome_writesOneBasedCoords() {
+    fun moveToNonHomeWritesOneBasedCoords() {
         assertEquals(
             bytes(0x1B, '['.code, '4'.code, ';'.code, '6'.code, 'H'.code).toList(),
             writeOf(MoveTo(Pos(3, 5))).toList(),
@@ -71,12 +71,12 @@ class TermTest {
     }
 
     @Test
-    fun clearAttrs_writesEscM() {
+    fun clearAttrsWritesEscM() {
         assertEquals(bytes(0x1B, '['.code, 'm'.code).toList(), writeOf(ClearAttrs()).toList())
     }
 
     @Test
-    fun moveRight_default_writesEscC() {
+    fun moveRightDefaultWritesEscC() {
         assertEquals(
             bytes(0x1B, '['.code, 'C'.code).toList(),
             writeOf(MoveRight()).toList(),
@@ -84,12 +84,12 @@ class TermTest {
     }
 
     @Test
-    fun moveRight_zero_writesNothing() {
+    fun moveRightZeroWritesNothing() {
         assertTrue(writeOf(MoveRight(0)).isEmpty())
     }
 
     @Test
-    fun moveRight_multi_writesCount() {
+    fun moveRightMultiWritesCount() {
         assertEquals(
             bytes(0x1B, '['.code, '5'.code, 'C'.code).toList(),
             writeOf(MoveRight(5)).toList(),
@@ -97,7 +97,7 @@ class TermTest {
     }
 
     @Test
-    fun eraseChar_default_writesEscX() {
+    fun eraseCharDefaultWritesEscX() {
         assertEquals(
             bytes(0x1B, '['.code, 'X'.code).toList(),
             writeOf(EraseChar()).toList(),
@@ -105,12 +105,12 @@ class TermTest {
     }
 
     @Test
-    fun eraseChar_zero_writesNothing() {
+    fun eraseCharZeroWritesNothing() {
         assertTrue(writeOf(EraseChar(0)).isEmpty())
     }
 
     @Test
-    fun hideCursor_on_writesL() {
+    fun hideCursorOnWritesL() {
         assertEquals(
             bytes(0x1B, '['.code, '?'.code, '2'.code, '5'.code, 'l'.code).toList(),
             writeOf(HideCursor(true)).toList(),
@@ -118,7 +118,7 @@ class TermTest {
     }
 
     @Test
-    fun hideCursor_off_writesH() {
+    fun hideCursorOffWritesH() {
         assertEquals(
             bytes(0x1B, '['.code, '?'.code, '2'.code, '5'.code, 'h'.code).toList(),
             writeOf(HideCursor(false)).toList(),
@@ -126,7 +126,7 @@ class TermTest {
     }
 
     @Test
-    fun moveFromTo_nextRow_writesCrlf() {
+    fun moveFromToNextRowWritesCrlf() {
         assertEquals(
             byteArrayOf(0x0D, 0x0A).toList(),
             writeOf(MoveFromTo(Pos(2, 5), Pos(3, 0))).toList(),
@@ -134,7 +134,7 @@ class TermTest {
     }
 
     @Test
-    fun moveFromTo_sameRowRight_writesMoveRight() {
+    fun moveFromToSameRowRightWritesMoveRight() {
         assertEquals(
             bytes(0x1B, '['.code, '4'.code, 'C'.code).toList(),
             writeOf(MoveFromTo(Pos(2, 1), Pos(2, 5))).toList(),
@@ -142,7 +142,7 @@ class TermTest {
     }
 
     @Test
-    fun moveFromTo_arbitrary_writesAbsoluteMove() {
+    fun moveFromToArbitraryWritesAbsoluteMove() {
         assertEquals(
             bytes(0x1B, '['.code, '4'.code, ';'.code, '6'.code, 'H'.code).toList(),
             writeOf(MoveFromTo(Pos(2, 8), Pos(3, 5))).toList(),
@@ -150,34 +150,34 @@ class TermTest {
     }
 
     @Test
-    fun moveFromTo_same_writesNothing() {
+    fun moveFromToSameWritesNothing() {
         assertTrue(writeOf(MoveFromTo(Pos(2, 5), Pos(2, 5))).isEmpty())
     }
 
     @Test
-    fun applicationKeypad_on_writesEscEquals() {
+    fun applicationKeypadOnWritesEscEquals() {
         assertEquals(bytes(0x1B, '='.code).toList(), writeOf(ApplicationKeypad(true)).toList())
     }
 
     @Test
-    fun applicationKeypad_off_writesEscGt() {
+    fun applicationKeypadOffWritesEscGt() {
         assertEquals(bytes(0x1B, '>'.code).toList(), writeOf(ApplicationKeypad(false)).toList())
     }
 
     @Test
-    fun bracketedPaste_on() {
+    fun bracketedPasteOn() {
         val expected = byteArrayOf(0x1B) + "[?2004h".encodeToByteArray()
         assertEquals(expected.toList(), writeOf(BracketedPaste(true)).toList())
     }
 
     @Test
-    fun bracketedPaste_off() {
+    fun bracketedPasteOff() {
         val expected = byteArrayOf(0x1B) + "[?2004l".encodeToByteArray()
         assertEquals(expected.toList(), writeOf(BracketedPaste(false)).toList())
     }
 
     @Test
-    fun mouseProtocolMode_sameStateWritesNothing() {
+    fun mouseProtocolModeSameStateWritesNothing() {
         assertTrue(
             writeOf(
                 MouseProtocolModeWriter(
@@ -189,7 +189,7 @@ class TermTest {
     }
 
     @Test
-    fun mouseProtocolMode_disablePress() {
+    fun mouseProtocolModeDisablePress() {
         val expected = byteArrayOf(0x1B) + "[?9l".encodeToByteArray()
         assertEquals(
             expected.toList(),
@@ -203,7 +203,7 @@ class TermTest {
     }
 
     @Test
-    fun mouseProtocolMode_enablePressRelease() {
+    fun mouseProtocolModeEnablePressRelease() {
         val expected = byteArrayOf(0x1B) + "[?1000h".encodeToByteArray()
         assertEquals(
             expected.toList(),
@@ -217,7 +217,7 @@ class TermTest {
     }
 
     @Test
-    fun mouseProtocolEncoding_sameWritesNothing() {
+    fun mouseProtocolEncodingSameWritesNothing() {
         assertTrue(
             writeOf(
                 MouseProtocolEncodingWriter(
@@ -229,7 +229,7 @@ class TermTest {
     }
 
     @Test
-    fun mouseProtocolEncoding_enableSgr() {
+    fun mouseProtocolEncodingEnableSgr() {
         val expected = byteArrayOf(0x1B) + "[?1006h".encodeToByteArray()
         assertEquals(
             expected.toList(),
@@ -243,33 +243,33 @@ class TermTest {
     }
 
     @Test
-    fun attrs_empty_writesNothing() {
+    fun attrsEmptyWritesNothing() {
         assertTrue(writeOf(Attrs()).isEmpty())
     }
 
     @Test
-    fun attrs_fgRedBoldItalic_emitsSgr() {
+    fun attrsFgRedBoldItalicEmitsSgr() {
         val out = writeOf(Attrs().fgcolor(Color.Idx(1)).intensity(Intensity.Bold).italic(true))
         val expected = byteArrayOf(0x1B) + "[31;1;3m".encodeToByteArray()
         assertEquals(expected.toList(), out.toList())
     }
 
     @Test
-    fun attrs_indexedHighColor_emits9X() {
+    fun attrsIndexedHighColorEmits9X() {
         val out = writeOf(Attrs().fgcolor(Color.Idx(10)))
         val expected = byteArrayOf(0x1B) + "[92m".encodeToByteArray()
         assertEquals(expected.toList(), out.toList())
     }
 
     @Test
-    fun attrs_indexed256_emits38_5_n() {
+    fun attrsIndexed256Emits38FiveN() {
         val out = writeOf(Attrs().bgcolor(Color.Idx(200)))
         val expected = byteArrayOf(0x1B) + "[48;5;200m".encodeToByteArray()
         assertEquals(expected.toList(), out.toList())
     }
 
     @Test
-    fun attrs_rgbForeground_emits38_2() {
+    fun attrsRgbForegroundEmits38Two() {
         val out = writeOf(Attrs().fgcolor(Color.Rgb(12, 34, 56)))
         val expected = byteArrayOf(0x1B) + "[38;2;12;34;56m".encodeToByteArray()
         assertEquals(expected.toList(), out.toList())
