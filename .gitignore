@@ -47,3 +47,10 @@ __pycache__/
 # Android SDK
 /.android-sdk/
 local.properties
+
+# Swift/SPM workspace state
+.swiftpm/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/

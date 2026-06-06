@@ -9,55 +9,55 @@ import io.github.kotlinmania.vt100.grid.Pos
 // upstream: read all of this from terminfo
 
 /** Writes a control-byte sequence into a caller-provided buffer. */
-public interface BufWrite {
-    public fun writeBuf(buf: MutableList<Byte>)
+internal interface BufWrite {
+    fun writeBuf(buf: MutableList<Byte>)
 }
 
 /** Clears the entire screen and moves the cursor home. */
-public class ClearScreen : BufWrite {
+internal class ClearScreen : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("[H[J")
     }
 }
 
 /** Clears from the cursor to the end of the current row. */
-public class ClearRowForward : BufWrite {
+internal class ClearRowForward : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("[K")
     }
 }
 
 /** Writes a CR/LF newline pair. */
-public class Crlf : BufWrite {
+internal class Crlf : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\r\n")
     }
 }
 
 /** Writes a single backspace control byte. */
-public class Backspace : BufWrite {
+internal class Backspace : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.add(0x08)
     }
 }
 
 /** Saves the current cursor position. */
-public class SaveCursor : BufWrite {
+internal class SaveCursor : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("7")
     }
 }
 
 /** Restores the cursor to the previously saved position. */
-public class RestoreCursor : BufWrite {
+internal class RestoreCursor : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("8")
     }
 }
 
 /** Moves the cursor to a row/column position. */
-public class MoveTo(private val row: Int, private val col: Int) : BufWrite {
-    public constructor(pos: Pos) : this(pos.row, pos.col)
+internal class MoveTo(private val row: Int, private val col: Int) : BufWrite {
+    internal constructor(pos: Pos) : this(pos.row, pos.col)
 
     override fun writeBuf(buf: MutableList<Byte>) {
         if (row == 0 && col == 0) {
@@ -73,14 +73,14 @@ public class MoveTo(private val row: Int, private val col: Int) : BufWrite {
 }
 
 /** Clears any active SGR text attributes. */
-public class ClearAttrs : BufWrite {
+internal class ClearAttrs : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("[m")
     }
 }
 
 /** Per-cell text intensity. */
-public enum class Intensity {
+internal enum class Intensity {
     Normal,
     Bold,
     Dim,
@@ -92,7 +92,7 @@ public enum class Intensity {
  * Only the fields explicitly set on the builder are emitted; cleared (null)
  * fields keep their previously written value.
  */
-public class Attrs : BufWrite {
+internal class Attrs : BufWrite {
     private var fgcolor: Color? = null
     private var bgcolor: Color? = null
     private var intensity: Intensity? = null
@@ -100,32 +100,32 @@ public class Attrs : BufWrite {
     private var underline: Boolean? = null
     private var inverse: Boolean? = null
 
-    public fun fgcolor(fgcolor: Color): Attrs {
+    internal fun fgcolor(fgcolor: Color): Attrs {
         this.fgcolor = fgcolor
         return this
     }
 
-    public fun bgcolor(bgcolor: Color): Attrs {
+    internal fun bgcolor(bgcolor: Color): Attrs {
         this.bgcolor = bgcolor
         return this
     }
 
-    public fun intensity(intensity: Intensity): Attrs {
+    internal fun intensity(intensity: Intensity): Attrs {
         this.intensity = intensity
         return this
     }
 
-    public fun italic(italic: Boolean): Attrs {
+    internal fun italic(italic: Boolean): Attrs {
         this.italic = italic
         return this
     }
 
-    public fun underline(underline: Boolean): Attrs {
+    internal fun underline(underline: Boolean): Attrs {
         this.underline = underline
         return this
     }
 
-    public fun inverse(inverse: Boolean): Attrs {
+    internal fun inverse(inverse: Boolean): Attrs {
         this.inverse = inverse
         return this
     }
@@ -217,7 +217,7 @@ public class Attrs : BufWrite {
 }
 
 /** Moves the cursor right by [count] columns. */
-public class MoveRight(private val count: Int = 1) : BufWrite {
+internal class MoveRight(private val count: Int = 1) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
@@ -232,7 +232,7 @@ public class MoveRight(private val count: Int = 1) : BufWrite {
 }
 
 /** Erases [count] cells starting at the cursor. */
-public class EraseChar(private val count: Int = 1) : BufWrite {
+internal class EraseChar(private val count: Int = 1) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
@@ -247,7 +247,7 @@ public class EraseChar(private val count: Int = 1) : BufWrite {
 }
 
 /** Hides or shows the cursor. */
-public class HideCursor(private val state: Boolean = false) : BufWrite {
+internal class HideCursor(private val state: Boolean = false) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?25l")
@@ -258,7 +258,7 @@ public class HideCursor(private val state: Boolean = false) : BufWrite {
 }
 
 /** Moves the cursor from [from] to [to], choosing the cheapest control sequence. */
-public class MoveFromTo(private val from: Pos, private val to: Pos) : BufWrite {
+internal class MoveFromTo(private val from: Pos, private val to: Pos) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when {
             to.row == from.row + 1 && to.col == 0 -> Crlf().writeBuf(buf)
@@ -270,7 +270,7 @@ public class MoveFromTo(private val from: Pos, private val to: Pos) : BufWrite {
 }
 
 /** Switches the terminal into or out of application-keypad mode. */
-public class ApplicationKeypad(private val state: Boolean = false) : BufWrite {
+internal class ApplicationKeypad(private val state: Boolean = false) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("=")
@@ -281,7 +281,7 @@ public class ApplicationKeypad(private val state: Boolean = false) : BufWrite {
 }
 
 /** Switches the terminal into or out of application-cursor mode. */
-public class ApplicationCursor(private val state: Boolean = false) : BufWrite {
+internal class ApplicationCursor(private val state: Boolean = false) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?1h")
@@ -292,7 +292,7 @@ public class ApplicationCursor(private val state: Boolean = false) : BufWrite {
 }
 
 /** Enables or disables bracketed-paste mode. */
-public class BracketedPaste(private val state: Boolean = false) : BufWrite {
+internal class BracketedPaste(private val state: Boolean = false) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?2004h")
@@ -307,7 +307,7 @@ public class BracketedPaste(private val state: Boolean = false) : BufWrite {
  * [prev] to [mode]. Writing nothing when the two are equal preserves the
  * upstream invariant.
  */
-public class MouseProtocolModeWriter(
+internal class MouseProtocolModeWriter(
     private val mode: MouseProtocolMode = MouseProtocolMode.None,
     private val prev: MouseProtocolMode = MouseProtocolMode.None,
 ) : BufWrite {
@@ -337,7 +337,7 @@ public class MouseProtocolModeWriter(
  * from [prev] to [encoding]. Writing nothing when the two are equal preserves
  * the upstream invariant.
  */
-public class MouseProtocolEncodingWriter(
+internal class MouseProtocolEncodingWriter(
     private val encoding: MouseProtocolEncoding = MouseProtocolEncoding.Default,
     private val prev: MouseProtocolEncoding = MouseProtocolEncoding.Default,
 ) : BufWrite {
