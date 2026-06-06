@@ -1,5 +1,5 @@
 version = 1
-name = "proc-macro-kotlin"
+name = "vt100-kotlin"
 
 [setup]
 script = '''
