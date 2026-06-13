@@ -20,21 +20,21 @@ import io.github.kotlinmania.vt100.term.SaveCursor
  * the Kotlin port keeps the value in an `Int` for ergonomic arithmetic and
  * relies on the upstream invariant that callers respect that ceiling.
  */
-public data class Size(
-    public val rows: Int = 0,
-    public val cols: Int = 0,
+internal data class Size(
+    internal val rows: Int = 0,
+    internal val cols: Int = 0,
 )
 
 /**
  * A position within a [Grid], measured in rows and columns from the top-left
  * cell.
  */
-public data class Pos(
-    public val row: Int = 0,
-    public val col: Int = 0,
+internal data class Pos(
+    internal val row: Int = 0,
+    internal val col: Int = 0,
 )
 
-public class Grid private constructor(
+internal class Grid private constructor(
     private var size: Size,
     private val scrollbackLen: Int,
 ) {
@@ -48,7 +48,7 @@ public class Grid private constructor(
     private val scrollback: ArrayDeque<Row> = ArrayDeque()
     private var scrollbackOffset: Int = 0
 
-    public fun allocateRows() {
+    internal fun allocateRows() {
         if (rows.isEmpty()) {
             repeat(size.rows) {
                 rows.add(Row.new(size.cols))
@@ -58,7 +58,7 @@ public class Grid private constructor(
 
     private fun newRow(): Row = Row.new(size.cols)
 
-    public fun clear() {
+    internal fun clear() {
         pos = Pos()
         savedPos = Pos()
         for (row in rows) {
@@ -70,9 +70,9 @@ public class Grid private constructor(
         savedOriginMode = false
     }
 
-    public fun size(): Size = size
+    internal fun size(): Size = size
 
-    public fun setSize(newSize: Size) {
+    internal fun setSize(newSize: Size) {
         if (newSize.cols != size.cols) {
             for (row in rows) {
                 row.wrap(false)
@@ -114,9 +114,9 @@ public class Grid private constructor(
         }
     }
 
-    public fun pos(): Pos = pos
+    internal fun pos(): Pos = pos
 
-    public fun setPos(newPos: Pos) {
+    internal fun setPos(newPos: Pos) {
         var p = newPos
         if (originMode) {
             p = p.copy(row = saturatingAdd(p.row, scrollTop))
@@ -127,17 +127,17 @@ public class Grid private constructor(
         colClamp()
     }
 
-    public fun saveCursor() {
+    internal fun saveCursor() {
         savedPos = pos
         savedOriginMode = originMode
     }
 
-    public fun restoreCursor() {
+    internal fun restoreCursor() {
         pos = savedPos
         originMode = savedOriginMode
     }
 
-    public fun visibleRows(): Sequence<Row> = sequence {
+    internal fun visibleRows(): Sequence<Row> = sequence {
         val scrollbackLen = scrollback.size
         val rowsLen = rows.size
         val skip = scrollbackLen - scrollbackOffset
@@ -160,35 +160,35 @@ public class Grid private constructor(
         }
     }
 
-    public fun drawingRows(): Sequence<Row> = rows.asSequence()
+    internal fun drawingRows(): Sequence<Row> = rows.asSequence()
 
-    public fun drawingRowsMut(): Sequence<Row> = rows.asSequence()
+    internal fun drawingRowsMut(): Sequence<Row> = rows.asSequence()
 
-    public fun visibleRow(row: Int): Row? = visibleRows().elementAtOrNull(row)
+    internal fun visibleRow(row: Int): Row? = visibleRows().elementAtOrNull(row)
 
-    public fun drawingRow(row: Int): Row? = rows.getOrNull(row)
+    internal fun drawingRow(row: Int): Row? = rows.getOrNull(row)
 
-    public fun drawingRowMut(row: Int): Row? = rows.getOrNull(row)
+    internal fun drawingRowMut(row: Int): Row? = rows.getOrNull(row)
 
-    public fun currentRowMut(): Row =
+    internal fun currentRowMut(): Row =
         // we assume pos.row is always valid
         drawingRowMut(pos.row)!!
 
-    public fun visibleCell(p: Pos): Cell? = visibleRow(p.row)?.get(p.col)
+    internal fun visibleCell(p: Pos): Cell? = visibleRow(p.row)?.get(p.col)
 
-    public fun drawingCell(p: Pos): Cell? = drawingRow(p.row)?.get(p.col)
+    internal fun drawingCell(p: Pos): Cell? = drawingRow(p.row)?.get(p.col)
 
-    public fun drawingCellMut(p: Pos): Cell? = drawingRowMut(p.row)?.getMut(p.col)
+    internal fun drawingCellMut(p: Pos): Cell? = drawingRowMut(p.row)?.getMut(p.col)
 
-    public fun scrollbackLen(): Int = scrollbackLen
+    internal fun scrollbackLen(): Int = scrollbackLen
 
-    public fun scrollback(): Int = scrollbackOffset
+    internal fun scrollback(): Int = scrollbackOffset
 
-    public fun setScrollback(rows: Int) {
+    internal fun setScrollback(rows: Int) {
         scrollbackOffset = rows.coerceAtMost(scrollback.size)
     }
 
-    public fun writeContents(contents: StringBuilder) {
+    internal fun writeContents(contents: StringBuilder) {
         var wrapping = false
         for (row in visibleRows()) {
             row.writeContents(contents, 0, size.cols, wrapping)
@@ -203,7 +203,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun writeContentsFormatted(contents: MutableList<Byte>): Attrs {
+    internal fun writeContentsFormatted(contents: MutableList<Byte>): Attrs {
         ClearAttrs().writeBuf(contents)
         ClearScreen().writeBuf(contents)
 
@@ -232,7 +232,7 @@ public class Grid private constructor(
         return prevAttrs
     }
 
-    public fun writeContentsDiff(
+    internal fun writeContentsDiff(
         contents: MutableList<Byte>,
         prev: Grid,
         prevAttrsInitial: Attrs,
@@ -272,7 +272,7 @@ public class Grid private constructor(
         return prevAttrs
     }
 
-    public fun writeCursorPositionFormatted(
+    internal fun writeCursorPositionFormatted(
         contents: MutableList<Byte>,
         prevPos: Pos?,
         prevAttrs: Attrs?,
@@ -393,13 +393,13 @@ public class Grid private constructor(
         }
     }
 
-    public fun eraseAll(attrs: Attrs) {
+    internal fun eraseAll(attrs: Attrs) {
         for (row in rows) {
             row.clear(attrs)
         }
     }
 
-    public fun eraseAllForward(attrs: Attrs) {
+    internal fun eraseAllForward(attrs: Attrs) {
         val p = pos
         for ((idx, row) in rows.withIndex()) {
             if (idx <= p.row) continue
@@ -409,7 +409,7 @@ public class Grid private constructor(
         eraseRowForward(attrs)
     }
 
-    public fun eraseAllBackward(attrs: Attrs) {
+    internal fun eraseAllBackward(attrs: Attrs) {
         val p = pos
         for ((idx, row) in rows.withIndex()) {
             if (idx >= p.row) break
@@ -419,11 +419,11 @@ public class Grid private constructor(
         eraseRowBackward(attrs)
     }
 
-    public fun eraseRow(attrs: Attrs) {
+    internal fun eraseRow(attrs: Attrs) {
         currentRowMut().clear(attrs)
     }
 
-    public fun eraseRowForward(attrs: Attrs) {
+    internal fun eraseRowForward(attrs: Attrs) {
         val sz = size
         val p = pos
         val row = currentRowMut()
@@ -434,7 +434,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun eraseRowBackward(attrs: Attrs) {
+    internal fun eraseRowBackward(attrs: Attrs) {
         val sz = size
         val p = pos
         val row = currentRowMut()
@@ -446,7 +446,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun insertCells(count: Int) {
+    internal fun insertCells(count: Int) {
         val sz = size
         val p = pos
         val wide = p.col < sz.cols &&
@@ -466,7 +466,7 @@ public class Grid private constructor(
         row.truncate(sz.cols)
     }
 
-    public fun deleteCells(count: Int) {
+    internal fun deleteCells(count: Int) {
         val sz = size
         val p = pos
         val row = currentRowMut()
@@ -477,7 +477,7 @@ public class Grid private constructor(
         row.resize(sz.cols, Cell.new())
     }
 
-    public fun eraseCells(count: Int, attrs: Attrs) {
+    internal fun eraseCells(count: Int, attrs: Attrs) {
         val sz = size
         val p = pos
         val row = currentRowMut()
@@ -489,7 +489,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun insertLines(count: Int) {
+    internal fun insertLines(count: Int) {
         repeat(count) {
             rows.removeAt(scrollBottom)
             rows.add(pos.row, newRow())
@@ -498,7 +498,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun deleteLines(count: Int) {
+    internal fun deleteLines(count: Int) {
         val n = count.coerceAtMost(size.rows - pos.row)
         repeat(n) {
             rows.add(scrollBottom + 1, newRow())
@@ -506,7 +506,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun scrollUp(count: Int) {
+    internal fun scrollUp(count: Int) {
         val n = count.coerceAtMost(size.rows - scrollTop)
         repeat(n) {
             rows.add(scrollBottom + 1, newRow())
@@ -523,7 +523,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun scrollDown(count: Int) {
+    internal fun scrollDown(count: Int) {
         repeat(count) {
             rows.removeAt(scrollBottom)
             rows.add(scrollTop, newRow())
@@ -532,7 +532,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun setScrollRegion(top: Int, bottom: Int) {
+    internal fun setScrollRegion(top: Int, bottom: Int) {
         val clampedBottom = bottom.coerceAtMost(size().rows - 1)
         if (top < clampedBottom) {
             scrollTop = top
@@ -550,18 +550,18 @@ public class Grid private constructor(
     private fun scrollRegionActive(): Boolean =
         scrollTop != 0 || scrollBottom != size.rows - 1
 
-    public fun setOriginMode(mode: Boolean) {
+    internal fun setOriginMode(mode: Boolean) {
         originMode = mode
         setPos(Pos(row = 0, col = 0))
     }
 
-    public fun rowIncClamp(count: Int) {
+    internal fun rowIncClamp(count: Int) {
         val inRegion = inScrollRegion()
         pos = pos.copy(row = saturatingAdd(pos.row, count))
         rowClampBottom(inRegion)
     }
 
-    public fun rowIncScroll(count: Int): Int {
+    internal fun rowIncScroll(count: Int): Int {
         val inRegion = inScrollRegion()
         pos = pos.copy(row = saturatingAdd(pos.row, count))
         val lines = rowClampBottom(inRegion)
@@ -573,13 +573,13 @@ public class Grid private constructor(
         }
     }
 
-    public fun rowDecClamp(count: Int) {
+    internal fun rowDecClamp(count: Int) {
         val inRegion = inScrollRegion()
         pos = pos.copy(row = saturatingSub(pos.row, count))
         rowClampTop(inRegion)
     }
 
-    public fun rowDecScroll(count: Int) {
+    internal fun rowDecScroll(count: Int) {
         val inRegion = inScrollRegion()
         // need to account for clamping by both rowClampTop and by saturatingSub
         val extraLines = saturatingSub(count, pos.row)
@@ -588,25 +588,25 @@ public class Grid private constructor(
         scrollDown(lines + extraLines)
     }
 
-    public fun rowSet(i: Int) {
+    internal fun rowSet(i: Int) {
         pos = pos.copy(row = i)
         rowClamp()
     }
 
-    public fun colInc(count: Int) {
+    internal fun colInc(count: Int) {
         pos = pos.copy(col = saturatingAdd(pos.col, count))
     }
 
-    public fun colIncClamp(count: Int) {
+    internal fun colIncClamp(count: Int) {
         pos = pos.copy(col = saturatingAdd(pos.col, count))
         colClamp()
     }
 
-    public fun colDec(count: Int) {
+    internal fun colDec(count: Int) {
         pos = pos.copy(col = saturatingSub(pos.col, count))
     }
 
-    public fun colTab() {
+    internal fun colTab() {
         var c = pos.col
         c -= c % 8
         c += 8
@@ -614,12 +614,12 @@ public class Grid private constructor(
         colClamp()
     }
 
-    public fun colSet(i: Int) {
+    internal fun colSet(i: Int) {
         pos = pos.copy(col = i)
         colClamp()
     }
 
-    public fun colWrap(width: Int, wrap: Boolean) {
+    internal fun colWrap(width: Int, wrap: Boolean) {
         if (pos.col > size.cols - width) {
             var prevPos = pos
             pos = pos.copy(col = 0)
@@ -670,7 +670,7 @@ public class Grid private constructor(
         }
     }
 
-    public fun copy(): Grid {
+    internal fun copy(): Grid {
         val out = Grid(size, scrollbackLen)
         out.pos = pos
         out.savedPos = savedPos
@@ -688,8 +688,8 @@ public class Grid private constructor(
         return out
     }
 
-    public companion object {
-        public fun new(size: Size, scrollbackLen: Int): Grid = Grid(size, scrollbackLen)
+    internal companion object {
+        internal fun new(size: Size, scrollbackLen: Int): Grid = Grid(size, scrollbackLen)
     }
 }
 

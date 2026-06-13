@@ -34,34 +34,34 @@ private const val TEXT_MODE_ITALIC: Int = 0b0000_0100
 private const val TEXT_MODE_UNDERLINE: Int = 0b0000_1000
 private const val TEXT_MODE_INVERSE: Int = 0b0001_0000
 
-public data class Attrs(
-    public var fgColor: Color = Color.Default,
-    public var bgColor: Color = Color.Default,
-    public var mode: Int = 0,
+internal data class Attrs(
+    internal var fgColor: Color = Color.Default,
+    internal var bgColor: Color = Color.Default,
+    internal var mode: Int = 0,
 ) {
-    public fun bold(): Boolean = mode and TEXT_MODE_BOLD != 0
+    internal fun bold(): Boolean = mode and TEXT_MODE_BOLD != 0
 
-    public fun dim(): Boolean = mode and TEXT_MODE_DIM != 0
+    internal fun dim(): Boolean = mode and TEXT_MODE_DIM != 0
 
     private fun intensity(): Int = mode and TEXT_MODE_INTENSITY
 
-    public fun setBold() {
+    internal fun setBold() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
         mode = mode or TEXT_MODE_BOLD
     }
 
-    public fun setDim() {
+    internal fun setDim() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
         mode = mode or TEXT_MODE_DIM
     }
 
-    public fun setNormalIntensity() {
+    internal fun setNormalIntensity() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
     }
 
-    public fun italic(): Boolean = mode and TEXT_MODE_ITALIC != 0
+    internal fun italic(): Boolean = mode and TEXT_MODE_ITALIC != 0
 
-    public fun setItalic(italic: Boolean) {
+    internal fun setItalic(italic: Boolean) {
         mode = if (italic) {
             mode or TEXT_MODE_ITALIC
         } else {
@@ -69,9 +69,9 @@ public data class Attrs(
         }
     }
 
-    public fun underline(): Boolean = mode and TEXT_MODE_UNDERLINE != 0
+    internal fun underline(): Boolean = mode and TEXT_MODE_UNDERLINE != 0
 
-    public fun setUnderline(underline: Boolean) {
+    internal fun setUnderline(underline: Boolean) {
         mode = if (underline) {
             mode or TEXT_MODE_UNDERLINE
         } else {
@@ -79,9 +79,9 @@ public data class Attrs(
         }
     }
 
-    public fun inverse(): Boolean = mode and TEXT_MODE_INVERSE != 0
+    internal fun inverse(): Boolean = mode and TEXT_MODE_INVERSE != 0
 
-    public fun setInverse(inverse: Boolean) {
+    internal fun setInverse(inverse: Boolean) {
         mode = if (inverse) {
             mode or TEXT_MODE_INVERSE
         } else {
@@ -89,7 +89,7 @@ public data class Attrs(
         }
     }
 
-    public fun writeEscapeCodeDiff(contents: MutableList<Byte>, other: Attrs) {
+    internal fun writeEscapeCodeDiff(contents: MutableList<Byte>, other: Attrs) {
         if (this != other && this == Attrs()) {
             contents.addAscii("\u001b[m")
             return

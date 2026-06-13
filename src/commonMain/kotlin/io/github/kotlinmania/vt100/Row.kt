@@ -8,11 +8,11 @@ import io.github.kotlinmania.vt100.term.ClearRowForward
 import io.github.kotlinmania.vt100.term.EraseChar
 import io.github.kotlinmania.vt100.term.MoveFromTo
 
-public class Row private constructor(
+internal class Row private constructor(
     private val cells: MutableList<Cell>,
     private var wrapped: Boolean,
 ) {
-    public constructor(cols: Int) : this(
+    internal constructor(cols: Int) : this(
         cells = MutableList(cols) { Cell.new() },
         wrapped = false,
     )
@@ -21,7 +21,7 @@ public class Row private constructor(
         // The grid size limits column counts to the unsigned 16-bit range.
         cells.size
 
-    public fun clear(attrs: Attrs) {
+    internal fun clear(attrs: Attrs) {
         for (cell in cells) {
             cell.clear(attrs.copy())
         }
@@ -30,22 +30,22 @@ public class Row private constructor(
 
     private fun cells(): List<Cell> = cells
 
-    public fun get(col: Int): Cell? = cells.getOrNull(col)
+    internal fun get(col: Int): Cell? = cells.getOrNull(col)
 
-    public fun getMut(col: Int): Cell? = cells.getOrNull(col)
+    internal fun getMut(col: Int): Cell? = cells.getOrNull(col)
 
-    public fun insert(i: Int, cell: Cell) {
+    internal fun insert(i: Int, cell: Cell) {
         cells.add(i, cell)
         wrapped = false
     }
 
-    public fun remove(i: Int) {
+    internal fun remove(i: Int) {
         clearWide(i)
         cells.removeAt(i)
         wrapped = false
     }
 
-    public fun erase(i: Int, attrs: Attrs) {
+    internal fun erase(i: Int, attrs: Attrs) {
         val wide = cells[i].isWide()
         clearWide(i)
         cells[i].clear(attrs.copy())
@@ -54,7 +54,7 @@ public class Row private constructor(
         }
     }
 
-    public fun truncate(len: Int) {
+    internal fun truncate(len: Int) {
         while (cells.size > len) {
             cells.removeAt(cells.lastIndex)
         }
@@ -65,7 +65,7 @@ public class Row private constructor(
         }
     }
 
-    public fun resize(len: Int, cell: Cell) {
+    internal fun resize(len: Int, cell: Cell) {
         while (cells.size > len) {
             cells.removeAt(cells.lastIndex)
         }
@@ -75,13 +75,13 @@ public class Row private constructor(
         wrapped = false
     }
 
-    public fun wrap(wrap: Boolean) {
+    internal fun wrap(wrap: Boolean) {
         wrapped = wrap
     }
 
-    public fun wrapped(): Boolean = wrapped
+    internal fun wrapped(): Boolean = wrapped
 
-    public fun clearWide(col: Int) {
+    internal fun clearWide(col: Int) {
         val cell = cells[col]
         val other = when {
             cell.isWide() -> cells[col + 1]
@@ -91,7 +91,7 @@ public class Row private constructor(
         other.clear(other.attrs().copy())
     }
 
-    public fun writeContents(
+    internal fun writeContents(
         contents: StringBuilder,
         start: Int,
         width: Int,
@@ -127,7 +127,7 @@ public class Row private constructor(
         }
     }
 
-    public fun writeContentsFormatted(
+    internal fun writeContentsFormatted(
         contents: MutableList<Byte>,
         start: Int,
         width: Int,
@@ -248,7 +248,7 @@ public class Row private constructor(
 
     // Although most of this logic matches writeContentsFormatted, the upstream
     // keeps it specialized to avoid making the shared path noticeably slower.
-    public fun writeContentsDiff(
+    internal fun writeContentsDiff(
         contents: MutableList<Byte>,
         prev: Row,
         start: Int,
@@ -410,7 +410,7 @@ public class Row private constructor(
         return previousPos to previousAttrs
     }
 
-    public fun copy(): Row =
+    internal fun copy(): Row =
         Row(
             cells = cells.map { it.copy() }.toMutableList(),
             wrapped = wrapped,
@@ -419,8 +419,8 @@ public class Row private constructor(
     override fun toString(): String =
         "Row(cells=$cells, wrapped=$wrapped)"
 
-    public companion object {
-        public fun new(cols: Int): Row = Row(cols)
+    internal companion object {
+        internal fun new(cols: Int): Row = Row(cols)
     }
 }
 
