@@ -137,28 +137,29 @@ internal class Grid private constructor(
         originMode = savedOriginMode
     }
 
-    internal fun visibleRows(): Sequence<Row> = sequence {
-        val scrollbackLen = scrollback.size
-        val rowsLen = rows.size
-        val skip = scrollbackLen - scrollbackOffset
-        // when scrollbackOffset > rowsLen (e.g. rows = 3, scrollbackLen = 10,
-        // offset = 9) the skip(10 - 9) will take 9 rows instead of 3. We
-        // need to set the upper bound to rowsLen (e.g. 3).
-        var emitted = 0
-        for ((idx, row) in scrollback.withIndex()) {
-            if (idx < skip) continue
-            if (emitted >= rowsLen) break
-            yield(row)
-            emitted++
+    internal fun visibleRows(): Sequence<Row> =
+        sequence {
+            val scrollbackLen = scrollback.size
+            val rowsLen = rows.size
+            val skip = scrollbackLen - scrollbackOffset
+            // when scrollbackOffset > rowsLen (e.g. rows = 3, scrollbackLen = 10,
+            // offset = 9) the skip(10 - 9) will take 9 rows instead of 3. We
+            // need to set the upper bound to rowsLen (e.g. 3).
+            var emitted = 0
+            for ((idx, row) in scrollback.withIndex()) {
+                if (idx < skip) continue
+                if (emitted >= rowsLen) break
+                yield(row)
+                emitted++
+            }
+            // Same for rowsLen - scrollbackOffset (e.g. 3 - 9). It would
+            // overflow with unsigned arithmetic upstream, so saturate here.
+            val take = (rowsLen - scrollbackOffset).coerceAtLeast(0)
+            for ((idx, row) in rows.withIndex()) {
+                if (idx >= take) break
+                yield(row)
+            }
         }
-        // Same for rowsLen - scrollbackOffset (e.g. 3 - 9). It would
-        // overflow with unsigned arithmetic upstream, so saturate here.
-        val take = (rowsLen - scrollbackOffset).coerceAtLeast(0)
-        for ((idx, row) in rows.withIndex()) {
-            if (idx >= take) break
-            yield(row)
-        }
-    }
 
     internal fun drawingRows(): Sequence<Row> = rows.asSequence()
 
@@ -213,15 +214,16 @@ internal class Grid private constructor(
         for ((i, row) in visibleRows().withIndex()) {
             // we limit the number of cols to a u16 (see Size), so visibleRows
             // can never return more rows than will fit
-            val (newPos, newAttrs) = row.writeContentsFormatted(
-                contents,
-                0,
-                size.cols,
-                i,
-                wrapping,
-                prevPos,
-                prevAttrs,
-            )
+            val (newPos, newAttrs) =
+                row.writeContentsFormatted(
+                    contents,
+                    0,
+                    size.cols,
+                    i,
+                    wrapping,
+                    prevPos,
+                    prevAttrs,
+                )
             prevPos = newPos
             prevAttrs = newAttrs
             wrapping = row.wrapped()
@@ -249,17 +251,18 @@ internal class Grid private constructor(
             val prevRow = prevIt.next()
             // we limit the number of cols to a u16 (see Size), so visibleRows
             // can never return more rows than will fit
-            val (newPos, newAttrs) = row.writeContentsDiff(
-                contents,
-                prevRow,
-                0,
-                size.cols,
-                i,
-                wrapping,
-                prevWrapping,
-                prevPos,
-                prevAttrs,
-            )
+            val (newPos, newAttrs) =
+                row.writeContentsDiff(
+                    contents,
+                    prevRow,
+                    0,
+                    size.cols,
+                    i,
+                    wrapping,
+                    prevWrapping,
+                    prevPos,
+                    prevAttrs,
+                )
             prevPos = newPos
             prevAttrs = newAttrs
             wrapping = row.wrapped()
@@ -449,10 +452,11 @@ internal class Grid private constructor(
     internal fun insertCells(count: Int) {
         val sz = size
         val p = pos
-        val wide = p.col < sz.cols &&
-            // we assume pos.row is always valid, and we know we are not off
-            // the end of a row because we just checked p.col < sz.cols
-            drawingCell(p)!!.isWideContinuation()
+        val wide =
+            p.col < sz.cols &&
+                // we assume pos.row is always valid, and we know we are not off
+                // the end of a row because we just checked p.col < sz.cols
+                drawingCell(p)!!.isWideContinuation()
         val row = currentRowMut()
         repeat(count) {
             if (wide) {
@@ -633,22 +637,22 @@ internal class Grid private constructor(
         }
     }
 
-    private fun rowClampTop(limitToScrollRegion: Boolean): Int {
-        return if (limitToScrollRegion && pos.row < scrollTop) {
+    private fun rowClampTop(limitToScrollRegion: Boolean): Int =
+        if (limitToScrollRegion && pos.row < scrollTop) {
             val rows = scrollTop - pos.row
             pos = pos.copy(row = scrollTop)
             rows
         } else {
             0
         }
-    }
 
     private fun rowClampBottom(limitToScrollRegion: Boolean): Int {
-        val bottom = if (limitToScrollRegion) {
-            scrollBottom
-        } else {
-            size.rows - 1
-        }
+        val bottom =
+            if (limitToScrollRegion) {
+                scrollBottom
+            } else {
+                size.rows - 1
+            }
         return if (pos.row > bottom) {
             val rows = pos.row - bottom
             pos = pos.copy(row = bottom)
@@ -700,7 +704,13 @@ private fun saturatingAdd(a: Int, b: Int): Int {
 
 private fun saturatingSub(a: Int, b: Int): Int {
     val s = a - b
-    return if (s > a) 0 else if (s < 0) 0 else s
+    return if (s > a) {
+        0
+    } else if (s < 0) {
+        0
+    } else {
+        s
+    }
 }
 
 private fun MutableList<Byte>.appendBytes(s: String) {
@@ -718,4 +728,3 @@ private fun MutableList<Byte>.appendBytes(s: String) {
         }
     }
 }
-

@@ -3,7 +3,6 @@ package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.vt100.grid.Pos
 import io.github.kotlinmania.vt100.term.Backspace
-import io.github.kotlinmania.vt100.term.BufWrite
 import io.github.kotlinmania.vt100.term.ClearRowForward
 import io.github.kotlinmania.vt100.term.EraseChar
 import io.github.kotlinmania.vt100.term.MoveFromTo
@@ -83,11 +82,12 @@ internal class Row private constructor(
 
     internal fun clearWide(col: Int) {
         val cell = cells[col]
-        val other = when {
-            cell.isWide() -> cells[col + 1]
-            cell.isWideContinuation() -> cells[col - 1]
-            else -> return
-        }
+        val other =
+            when {
+                cell.isWide() -> cells[col + 1]
+                cell.isWideContinuation() -> cells[col - 1]
+                else -> return
+            }
         other.clear(other.attrs().copy())
     }
 
@@ -100,7 +100,8 @@ internal class Row private constructor(
         var previousWasWide = false
         var previousCol = start
 
-        for ((col, cell) in cells()
+        for (
+        (col, cell) in cells()
             .withIndex()
             .drop(start)
             .take(width)
@@ -139,11 +140,12 @@ internal class Row private constructor(
         var previousWasWide = false
         val defaultCell = Cell.new()
 
-        var previousPos = prevPos ?: if (wrapping) {
-            Pos(row = row - 1, col = cols())
-        } else {
-            Pos(row = row, col = start)
-        }
+        var previousPos =
+            prevPos ?: if (wrapping) {
+                Pos(row = row - 1, col = cols())
+            } else {
+                Pos(row = row, col = start)
+            }
         var previousAttrs = prevAttrs ?: Attrs()
 
         val firstCell = cells[start]
@@ -160,7 +162,8 @@ internal class Row private constructor(
         }
 
         var erase: Pair<Int, Attrs>? = null
-        for ((col, cell) in cells()
+        for (
+        (col, cell) in cells()
             .withIndex()
             .drop(start)
             .take(width)
@@ -277,12 +280,13 @@ internal class Row private constructor(
                 previousAttrs = firstCellAttrs.copy()
             }
             var cellContents = prevFirstCell.contents()
-            val needErase = if (cellContents.isEmpty()) {
-                cellContents = " "
-                true
-            } else {
-                false
-            }
+            val needErase =
+                if (cellContents.isEmpty()) {
+                    cellContents = " "
+                    true
+                } else {
+                    false
+                }
             contents.appendBytes(cellContents)
             Backspace().writeBuf(contents)
             if (prevFirstCell.isWide()) {
@@ -295,7 +299,8 @@ internal class Row private constructor(
         }
 
         var erase: Pair<Int, Attrs>? = null
-        for ((col, cellPair) in cells()
+        for (
+        (col, cellPair) in cells()
             .zip(prev.cells())
             .withIndex()
             .drop(start)
@@ -385,11 +390,12 @@ internal class Row private constructor(
         // last character without erasing it so the cursor is positioned after
         // the end of the line and drawing the next line can start writing.
         if ((!wrapped && prev.wrapped) || (!prev.wrapped && wrapped)) {
-            val endPos = if (cells[cols() - 1].isWideContinuation()) {
-                Pos(row = row, col = cols() - 2)
-            } else {
-                Pos(row = row, col = cols() - 1)
-            }
+            val endPos =
+                if (cells[cols() - 1].isWideContinuation()) {
+                    Pos(row = row, col = cols() - 2)
+                } else {
+                    Pos(row = row, col = cols() - 1)
+                }
             MoveFromTo(previousPos, endPos).writeBuf(contents)
             previousPos = endPos
             if (!wrapped) {
