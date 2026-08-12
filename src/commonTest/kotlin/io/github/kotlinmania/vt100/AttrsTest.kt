@@ -51,10 +51,11 @@ class AttrsTest {
 
     @Test
     fun writesChangedColorAndModeParametersInOrder() {
-        val attrs = Attrs(
-            fgColor = Color.Idx(9),
-            bgColor = Color.Rgb(1, 2, 3),
-        )
+        val attrs =
+            Attrs(
+                fgColor = Color.Idx(9),
+                bgColor = Color.Rgb(1, 2, 3),
+            )
         attrs.setBold()
         attrs.setItalic(true)
         attrs.setUnderline(true)

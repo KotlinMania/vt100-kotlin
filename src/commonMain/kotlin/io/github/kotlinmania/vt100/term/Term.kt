@@ -56,7 +56,10 @@ internal class RestoreCursor : BufWrite {
 }
 
 /** Moves the cursor to a row/column position. */
-internal class MoveTo(private val row: Int, private val col: Int) : BufWrite {
+internal class MoveTo(
+    private val row: Int,
+    private val col: Int,
+) : BufWrite {
     internal constructor(pos: Pos) : this(pos.row, pos.col)
 
     override fun writeBuf(buf: MutableList<Byte>) {
@@ -217,7 +220,9 @@ internal class Attrs : BufWrite {
 }
 
 /** Moves the cursor right by [count] columns. */
-internal class MoveRight(private val count: Int = 1) : BufWrite {
+internal class MoveRight(
+    private val count: Int = 1,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
@@ -232,7 +237,9 @@ internal class MoveRight(private val count: Int = 1) : BufWrite {
 }
 
 /** Erases [count] cells starting at the cursor. */
-internal class EraseChar(private val count: Int = 1) : BufWrite {
+internal class EraseChar(
+    private val count: Int = 1,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
@@ -247,7 +254,9 @@ internal class EraseChar(private val count: Int = 1) : BufWrite {
 }
 
 /** Hides or shows the cursor. */
-internal class HideCursor(private val state: Boolean = false) : BufWrite {
+internal class HideCursor(
+    private val state: Boolean = false,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?25l")
@@ -258,7 +267,10 @@ internal class HideCursor(private val state: Boolean = false) : BufWrite {
 }
 
 /** Moves the cursor from [from] to [to], choosing the cheapest control sequence. */
-internal class MoveFromTo(private val from: Pos, private val to: Pos) : BufWrite {
+internal class MoveFromTo(
+    private val from: Pos,
+    private val to: Pos,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         when {
             to.row == from.row + 1 && to.col == 0 -> Crlf().writeBuf(buf)
@@ -270,7 +282,9 @@ internal class MoveFromTo(private val from: Pos, private val to: Pos) : BufWrite
 }
 
 /** Switches the terminal into or out of application-keypad mode. */
-internal class ApplicationKeypad(private val state: Boolean = false) : BufWrite {
+internal class ApplicationKeypad(
+    private val state: Boolean = false,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("=")
@@ -281,7 +295,9 @@ internal class ApplicationKeypad(private val state: Boolean = false) : BufWrite 
 }
 
 /** Switches the terminal into or out of application-cursor mode. */
-internal class ApplicationCursor(private val state: Boolean = false) : BufWrite {
+internal class ApplicationCursor(
+    private val state: Boolean = false,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?1h")
@@ -292,7 +308,9 @@ internal class ApplicationCursor(private val state: Boolean = false) : BufWrite 
 }
 
 /** Enables or disables bracketed-paste mode. */
-internal class BracketedPaste(private val state: Boolean = false) : BufWrite {
+internal class BracketedPaste(
+    private val state: Boolean = false,
+) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
             buf.appendAscii("[?2004h")
@@ -317,13 +335,14 @@ internal class MouseProtocolModeWriter(
         }
 
         when (mode) {
-            MouseProtocolMode.None -> when (prev) {
-                MouseProtocolMode.None -> { /* unreachable */ }
-                MouseProtocolMode.Press -> buf.appendAscii("[?9l")
-                MouseProtocolMode.PressRelease -> buf.appendAscii("[?1000l")
-                MouseProtocolMode.ButtonMotion -> buf.appendAscii("[?1002l")
-                MouseProtocolMode.AnyMotion -> buf.appendAscii("[?1003l")
-            }
+            MouseProtocolMode.None ->
+                when (prev) {
+                    MouseProtocolMode.None -> { /* unreachable */ }
+                    MouseProtocolMode.Press -> buf.appendAscii("[?9l")
+                    MouseProtocolMode.PressRelease -> buf.appendAscii("[?1000l")
+                    MouseProtocolMode.ButtonMotion -> buf.appendAscii("[?1002l")
+                    MouseProtocolMode.AnyMotion -> buf.appendAscii("[?1003l")
+                }
             MouseProtocolMode.Press -> buf.appendAscii("[?9h")
             MouseProtocolMode.PressRelease -> buf.appendAscii("[?1000h")
             MouseProtocolMode.ButtonMotion -> buf.appendAscii("[?1002h")
@@ -347,11 +366,12 @@ internal class MouseProtocolEncodingWriter(
         }
 
         when (encoding) {
-            MouseProtocolEncoding.Default -> when (prev) {
-                MouseProtocolEncoding.Default -> { /* unreachable */ }
-                MouseProtocolEncoding.Utf8 -> buf.appendAscii("[?1005l")
-                MouseProtocolEncoding.Sgr -> buf.appendAscii("[?1006l")
-            }
+            MouseProtocolEncoding.Default ->
+                when (prev) {
+                    MouseProtocolEncoding.Default -> { /* unreachable */ }
+                    MouseProtocolEncoding.Utf8 -> buf.appendAscii("[?1005l")
+                    MouseProtocolEncoding.Sgr -> buf.appendAscii("[?1006l")
+                }
             MouseProtocolEncoding.Utf8 -> buf.appendAscii("[?1005h")
             MouseProtocolEncoding.Sgr -> buf.appendAscii("[?1006h")
         }

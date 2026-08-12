@@ -7,7 +7,9 @@ public sealed interface Color {
     public data object Default : Color
 
     /** An indexed terminal color. */
-    public data class Idx(public val value: Int) : Color {
+    public data class Idx(
+        public val value: Int,
+    ) : Color {
         init {
             require(value in 0..255) { "Indexed terminal color must fit in one byte: $value" }
         }
@@ -62,31 +64,34 @@ internal data class Attrs(
     internal fun italic(): Boolean = mode and TEXT_MODE_ITALIC != 0
 
     internal fun setItalic(italic: Boolean) {
-        mode = if (italic) {
-            mode or TEXT_MODE_ITALIC
-        } else {
-            mode and TEXT_MODE_ITALIC.inv()
-        }
+        mode =
+            if (italic) {
+                mode or TEXT_MODE_ITALIC
+            } else {
+                mode and TEXT_MODE_ITALIC.inv()
+            }
     }
 
     internal fun underline(): Boolean = mode and TEXT_MODE_UNDERLINE != 0
 
     internal fun setUnderline(underline: Boolean) {
-        mode = if (underline) {
-            mode or TEXT_MODE_UNDERLINE
-        } else {
-            mode and TEXT_MODE_UNDERLINE.inv()
-        }
+        mode =
+            if (underline) {
+                mode or TEXT_MODE_UNDERLINE
+            } else {
+                mode and TEXT_MODE_UNDERLINE.inv()
+            }
     }
 
     internal fun inverse(): Boolean = mode and TEXT_MODE_INVERSE != 0
 
     internal fun setInverse(inverse: Boolean) {
-        mode = if (inverse) {
-            mode or TEXT_MODE_INVERSE
-        } else {
-            mode and TEXT_MODE_INVERSE.inv()
-        }
+        mode =
+            if (inverse) {
+                mode or TEXT_MODE_INVERSE
+            } else {
+                mode and TEXT_MODE_INVERSE.inv()
+            }
     }
 
     internal fun writeEscapeCodeDiff(contents: MutableList<Byte>, other: Attrs) {

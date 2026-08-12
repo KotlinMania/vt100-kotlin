@@ -90,19 +90,21 @@ public class Cell internal constructor() {
     public fun isWideContinuation(): Boolean = lenAndFlags and IS_WIDE_CONTINUATION != 0
 
     private fun setWide(wide: Boolean) {
-        lenAndFlags = if (wide) {
-            lenAndFlags or IS_WIDE
-        } else {
-            lenAndFlags and IS_WIDE.inv()
-        }
+        lenAndFlags =
+            if (wide) {
+                lenAndFlags or IS_WIDE
+            } else {
+                lenAndFlags and IS_WIDE.inv()
+            }
     }
 
     internal fun setWideContinuation(wide: Boolean) {
-        lenAndFlags = if (wide) {
-            lenAndFlags or IS_WIDE_CONTINUATION
-        } else {
-            lenAndFlags and IS_WIDE_CONTINUATION.inv()
-        }
+        lenAndFlags =
+            if (wide) {
+                lenAndFlags or IS_WIDE_CONTINUATION
+            } else {
+                lenAndFlags and IS_WIDE_CONTINUATION.inv()
+            }
     }
 
     internal fun attrs(): Attrs = attrs
@@ -171,21 +173,25 @@ public class Cell internal constructor() {
 
 // Encodes a Unicode scalar value into UTF-8 bytes. The upstream helper writes
 // between one and four bytes per code point.
-private fun codePointToUtf8(c: Int): ByteArray = when {
-    c < 0x80 -> byteArrayOf(c.toByte())
-    c < 0x800 -> byteArrayOf(
-        (0xC0 or (c shr 6)).toByte(),
-        (0x80 or (c and 0x3F)).toByte(),
-    )
-    c < 0x10000 -> byteArrayOf(
-        (0xE0 or (c shr 12)).toByte(),
-        (0x80 or ((c shr 6) and 0x3F)).toByte(),
-        (0x80 or (c and 0x3F)).toByte(),
-    )
-    else -> byteArrayOf(
-        (0xF0 or (c shr 18)).toByte(),
-        (0x80 or ((c shr 12) and 0x3F)).toByte(),
-        (0x80 or ((c shr 6) and 0x3F)).toByte(),
-        (0x80 or (c and 0x3F)).toByte(),
-    )
-}
+private fun codePointToUtf8(c: Int): ByteArray =
+    when {
+        c < 0x80 -> byteArrayOf(c.toByte())
+        c < 0x800 ->
+            byteArrayOf(
+                (0xC0 or (c shr 6)).toByte(),
+                (0x80 or (c and 0x3F)).toByte(),
+            )
+        c < 0x10000 ->
+            byteArrayOf(
+                (0xE0 or (c shr 12)).toByte(),
+                (0x80 or ((c shr 6) and 0x3F)).toByte(),
+                (0x80 or (c and 0x3F)).toByte(),
+            )
+        else ->
+            byteArrayOf(
+                (0xF0 or (c shr 18)).toByte(),
+                (0x80 or ((c shr 12) and 0x3F)).toByte(),
+                (0x80 or ((c shr 6) and 0x3F)).toByte(),
+                (0x80 or (c and 0x3F)).toByte(),
+            )
+    }

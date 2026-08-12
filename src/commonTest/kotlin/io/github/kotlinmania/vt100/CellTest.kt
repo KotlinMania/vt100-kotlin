@@ -71,10 +71,11 @@ class CellTest {
         for (i in 0 until 12) {
             cell.append(0x0301)
         }
-        val expected = buildString {
-            append('a')
-            repeat(9) { append('́') }
-        }
+        val expected =
+            buildString {
+                append('a')
+                repeat(9) { append('́') }
+            }
         assertEquals(expected, cell.contents())
     }
 
@@ -130,10 +131,11 @@ class CellTest {
 
     @Test
     fun reflectsAttrsFlagsAndColors() {
-        val attrs = Attrs(
-            fgColor = Color.Idx(1),
-            bgColor = Color.Rgb(10, 20, 30),
-        )
+        val attrs =
+            Attrs(
+                fgColor = Color.Idx(1),
+                bgColor = Color.Rgb(10, 20, 30),
+            )
         attrs.setBold()
         attrs.setItalic(true)
         attrs.setUnderline(true)
