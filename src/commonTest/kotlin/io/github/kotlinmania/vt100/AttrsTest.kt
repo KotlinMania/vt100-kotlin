@@ -1,4 +1,4 @@
-// port-lint: source attrs.rs
+// port-lint: tests attrs.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test

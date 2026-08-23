@@ -11,3 +11,5 @@
  * terminal applications - programs like screen or tmux for example.
  */
 package io.github.kotlinmania.vt100
+
+internal object Lib

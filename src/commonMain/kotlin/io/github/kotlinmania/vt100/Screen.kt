@@ -148,20 +148,19 @@ public class Screen internal constructor(
      * Returns the contents of each row on the screen (not including scrollback)
      * as a sequence of strings, from the column [start] up to the width [width].
      */
-    public fun rows(start: Int, width: Int): Sequence<String> {
-        return grid().visibleRows().map { row ->
+    public fun rows(start: Int, width: Int): Sequence<String> =
+        grid().visibleRows().map { row ->
             val contents = StringBuilder()
             row.writeContents(contents, start, width, false)
             contents.toString()
         }
-    }
 
     /**
      * Returns the contents of the screen (not including scrollback) between the
      * given coordinates.
      */
-    public fun contentsBetween(startRow: Int, startCol: Int, endRow: Int, endCol: Int): String {
-        return when {
+    public fun contentsBetween(startRow: Int, startCol: Int, endRow: Int, endCol: Int): String =
+        when {
             startRow < endRow -> {
                 val (_, cols) = size()
                 val contents = StringBuilder()
@@ -200,7 +199,6 @@ public class Screen internal constructor(
             }
             else -> ""
         }
-    }
 
     /**
      * Returns a formatted representation of the entire screen (including cursor
@@ -244,26 +242,27 @@ public class Screen internal constructor(
      * Returns a formatted representation of each row on the screen (not
      * including scrollback) from column [start] up to width [width].
      */
-    public fun rowsFormatted(start: Int, width: Int): Sequence<ByteArray> = sequence {
-        var wrapping = false
-        val cols = grid.size().cols
-        for ((i, row) in grid().visibleRows().withIndex()) {
-            val contents = mutableListOf<Byte>()
-            row.writeContentsFormatted(
-                contents = contents,
-                start = start,
-                width = width,
-                row = i,
-                wrapping = wrapping,
-                prevPos = null,
-                prevAttrs = null,
-            )
-            if (start == 0 && width == cols) {
-                wrapping = row.wrapped()
+    public fun rowsFormatted(start: Int, width: Int): Sequence<ByteArray> =
+        sequence {
+            var wrapping = false
+            val cols = grid.size().cols
+            for ((i, row) in grid().visibleRows().withIndex()) {
+                val contents = mutableListOf<Byte>()
+                row.writeContentsFormatted(
+                    contents = contents,
+                    start = start,
+                    width = width,
+                    row = i,
+                    wrapping = wrapping,
+                    prevPos = null,
+                    prevAttrs = null,
+                )
+                if (start == 0 && width == cols) {
+                    wrapping = row.wrapped()
+                }
+                yield(contents.toByteArray())
             }
-            yield(contents.toByteArray())
         }
-    }
 
     /**
      * Returns a formatted representation of the difference between the screen
@@ -287,30 +286,31 @@ public class Screen internal constructor(
      * Returns a formatted representation of the difference between each row on
      * the screen and a previous screen from column [start] up to width [width].
      */
-    public fun rowsDiff(prev: Screen, start: Int, width: Int): Sequence<ByteArray> = sequence {
-        val rows = grid().visibleRows().toList()
-        val prevRows = prev.grid().visibleRows().toList()
-        val count = minOf(rows.size, prevRows.size)
-        var wrapping = false
-        var prevWrapping = false
-        for (i in 0 until count) {
-            val contents = mutableListOf<Byte>()
-            rows[i].writeContentsDiff(
-                contents = contents,
-                prev = prevRows[i],
-                start = start,
-                width = width,
-                row = i,
-                wrapping = wrapping,
-                prevWrapping = prevWrapping,
-                prevPos = Pos(row = i, col = start),
-                prevAttrs = Attrs(),
-            )
-            wrapping = rows[i].wrapped()
-            prevWrapping = prevRows[i].wrapped()
-            yield(contents.toByteArray())
+    public fun rowsDiff(prev: Screen, start: Int, width: Int): Sequence<ByteArray> =
+        sequence {
+            val rows = grid().visibleRows().toList()
+            val prevRows = prev.grid().visibleRows().toList()
+            val count = minOf(rows.size, prevRows.size)
+            var wrapping = false
+            var prevWrapping = false
+            for (i in 0 until count) {
+                val contents = mutableListOf<Byte>()
+                rows[i].writeContentsDiff(
+                    contents = contents,
+                    prev = prevRows[i],
+                    start = start,
+                    width = width,
+                    row = i,
+                    wrapping = wrapping,
+                    prevWrapping = prevWrapping,
+                    prevPos = Pos(row = i, col = start),
+                    prevAttrs = Attrs(),
+                )
+                wrapping = rows[i].wrapped()
+                prevWrapping = prevRows[i].wrapped()
+                yield(contents.toByteArray())
+            }
         }
-    }
 
     /** Returns a formatted representation of the current terminal input mode settings. */
     public fun inputModeFormatted(): ByteArray {
@@ -914,4 +914,3 @@ public class Screen internal constructor(
         gridMut().setScrollRegion(bounds.first - 1, bounds.second - 1)
     }
 }
-

@@ -1,3 +1,4 @@
+// port-lint: tests parser.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test
@@ -34,7 +35,12 @@ class ParserTest {
         parser.process("Hello\r\n\u001b[34mWorld\u001b[0m")
 
         assertEquals("Hello", parser.screen().rows(0, 5).first())
-        val worldRow = parser.screen().rows(0, 5).drop(1).first()
+        val worldRow =
+            parser
+                .screen()
+                .rows(0, 5)
+                .drop(1)
+                .first()
         assertEquals("World", worldRow)
 
         val cell = parser.screen().cell(1, 0)
@@ -45,11 +51,12 @@ class ParserTest {
     @Test
     fun parserHandlesOscWindowTitleCallbacks() {
         var recordedTitle: String? = null
-        val callbacks = object : Callbacks {
-            override fun setWindowTitle(screen: Screen, title: ByteArray) {
-                recordedTitle = title.decodeToString()
+        val callbacks =
+            object : Callbacks {
+                override fun setWindowTitle(screen: Screen, title: ByteArray) {
+                    recordedTitle = title.decodeToString()
+                }
             }
-        }
         val parser = Parser(24, 80, 0, callbacks)
         parser.process("\u001b]2;My Terminal Window\u0007")
 
@@ -59,11 +66,12 @@ class ParserTest {
     @Test
     fun parserHandlesBellCallback() {
         var bellCount = 0
-        val callbacks = object : Callbacks {
-            override fun audibleBell(screen: Screen) {
-                bellCount++
+        val callbacks =
+            object : Callbacks {
+                override fun audibleBell(screen: Screen) {
+                    bellCount++
+                }
             }
-        }
         val parser = Parser(24, 80, 0, callbacks)
         parser.process("Alert\u0007\u0007")
 
