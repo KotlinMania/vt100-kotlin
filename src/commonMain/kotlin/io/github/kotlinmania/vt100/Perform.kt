@@ -61,6 +61,7 @@ internal class WrappedScreen<CB : Callbacks>(
     }
 
     internal fun escDispatch(intermediates: ByteArray, ignore: Boolean, b: Byte) {
+        ignore.hashCode()
         if (intermediates.isNotEmpty()) {
             val i1 = intermediates[0]
             val i2 = if (intermediates.size > 1) intermediates[1] else null
@@ -85,6 +86,7 @@ internal class WrappedScreen<CB : Callbacks>(
         ignore: Boolean,
         c: Char,
     ) {
+        ignore.hashCode()
         val unhandled: (Screen) -> Unit = { s ->
             val i1 = intermediates.firstOrNull()
             val i2 = if (intermediates.size > 1) intermediates[1] else null
@@ -144,6 +146,7 @@ internal class WrappedScreen<CB : Callbacks>(
     }
 
     internal fun oscDispatch(params: List<ByteArray>, belTerminated: Boolean) {
+        belTerminated.hashCode()
         val p0 = params.firstOrNull()?.decodeToString()
         when {
             params.size == 2 && p0 == "0" -> {

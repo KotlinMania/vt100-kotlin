@@ -6,9 +6,9 @@ Based on AST analysis, here are the concrete next steps.
 
 - **Files Present:** 10/10 (100.0%)
 - **Function parity:** 245/245 matched (target 382) — 100.0%
-- **Class/type parity:** 33/33 matched (target 46) — 100.0%
-- **Combined symbol parity:** 278/278 matched (target 428) — 100.0%
-- **Average inline-code cosine:** 0.80 (function body across 9 matched files)
+- **Class/type parity:** 31/33 matched (target 44) — 93.9%
+- **Combined symbol parity:** 276/278 matched (target 426) — 99.3%
+- **Average inline-code cosine:** 0.79 (function body across 9 matched files)
 - **Average documentation cosine:** 0.40 (doc text across 9 matched files)
 - **Cheat-zeroed Files:** 0
 - **Critical Issues:** 1 files with <0.60 function similarity
@@ -41,14 +41,13 @@ Every matched file is listed below with function and type symbol parity.
 ### 2. callbacks
 
 - **Target:** `vt100.Callbacks`
-- **Similarity:** 0.76
+- **Similarity:** 0.65
 - **Dependents:** 1
-- **Priority Score:** 1001302.4
+- **Priority Score:** 1001303.4
 - **Functions:** 12/12 matched
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
-- **Lint issues:** 28
 
 ### 3. parser
 
@@ -61,7 +60,18 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
 
-### 4. screen
+### 4. term
+
+- **Target:** `term.Term`
+- **Similarity:** 0.66
+- **Dependents:** 0
+- **Priority Score:** 23003.4
+- **Functions:** 10/10 matched (target 76)
+- **Missing functions:** _none_
+- **Types:** 18/20 matched (target 21)
+- **Missing types:** `MouseProtocolMode`, `MouseProtocolEncoding`
+
+### 5. screen
 
 - **Target:** `vt100.Screen`
 - **Similarity:** 0.89
@@ -72,7 +82,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
-### 5. grid
+### 6. grid
 
 - **Target:** `grid.Grid`
 - **Similarity:** 0.82
@@ -81,17 +91,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Functions:** 59/59 matched (target 77)
 - **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
-- **Missing types:** _none_
-
-### 6. term
-
-- **Target:** `term.Term`
-- **Similarity:** 0.63
-- **Dependents:** 0
-- **Priority Score:** 3003.7
-- **Functions:** 10/10 matched (target 76)
-- **Missing functions:** _none_
-- **Types:** 20/20 matched (target 23)
 - **Missing types:** _none_
 
 ### 7. row
@@ -126,7 +125,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched
 - **Missing types:** _none_
-- **Lint issues:** 3
 
 ### 10. lib
 
