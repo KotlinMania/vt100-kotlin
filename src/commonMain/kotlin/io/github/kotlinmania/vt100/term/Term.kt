@@ -16,14 +16,14 @@ internal interface BufWrite {
 /** Clears the entire screen and moves the cursor home. */
 internal class ClearScreen : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
-        buf.appendAscii("[H[J")
+        buf.appendAscii("\u001b[H\u001b[J")
     }
 }
 
 /** Clears from the cursor to the end of the current row. */
 internal class ClearRowForward : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
-        buf.appendAscii("[K")
+        buf.appendAscii("\u001b[K")
     }
 }
 
@@ -44,14 +44,14 @@ internal class Backspace : BufWrite {
 /** Saves the current cursor position. */
 internal class SaveCursor : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
-        buf.appendAscii("7")
+        buf.appendAscii("\u001b7")
     }
 }
 
 /** Restores the cursor to the previously saved position. */
 internal class RestoreCursor : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
-        buf.appendAscii("8")
+        buf.appendAscii("\u001b8")
     }
 }
 
@@ -64,9 +64,9 @@ internal class MoveTo(
 
     override fun writeBuf(buf: MutableList<Byte>) {
         if (row == 0 && col == 0) {
-            buf.appendAscii("[H")
+            buf.appendAscii("\u001b[H")
         } else {
-            buf.appendAscii("[")
+            buf.appendAscii("\u001b[")
             buf.appendItoa(row + 1)
             buf.add(';'.code.toByte())
             buf.appendItoa(col + 1)
@@ -78,7 +78,7 @@ internal class MoveTo(
 /** Clears any active SGR text attributes. */
 internal class ClearAttrs : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
-        buf.appendAscii("[m")
+        buf.appendAscii("\u001b[m")
     }
 }
 
@@ -144,7 +144,7 @@ internal class Attrs : BufWrite {
             return
         }
 
-        buf.appendAscii("[")
+        buf.appendAscii("\u001b[")
         var first = true
 
         fun writeParam(i: Int) {
@@ -226,9 +226,9 @@ internal class MoveRight(
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
-            1 -> buf.appendAscii("[C")
+            1 -> buf.appendAscii("\u001b[C")
             else -> {
-                buf.appendAscii("[")
+                buf.appendAscii("\u001b[")
                 buf.appendItoa(count)
                 buf.add('C'.code.toByte())
             }
@@ -243,9 +243,9 @@ internal class EraseChar(
     override fun writeBuf(buf: MutableList<Byte>) {
         when (count) {
             0 -> { /* no-op */ }
-            1 -> buf.appendAscii("[X")
+            1 -> buf.appendAscii("\u001b[X")
             else -> {
-                buf.appendAscii("[")
+                buf.appendAscii("\u001b[")
                 buf.appendItoa(count)
                 buf.add('X'.code.toByte())
             }
@@ -259,9 +259,9 @@ internal class HideCursor(
 ) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
-            buf.appendAscii("[?25l")
+            buf.appendAscii("\u001b[?25l")
         } else {
-            buf.appendAscii("[?25h")
+            buf.appendAscii("\u001b[?25h")
         }
     }
 }
@@ -287,9 +287,9 @@ internal class ApplicationKeypad(
 ) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
-            buf.appendAscii("=")
+            buf.appendAscii("\u001b=")
         } else {
-            buf.appendAscii(">")
+            buf.appendAscii("\u001b>")
         }
     }
 }
@@ -300,9 +300,9 @@ internal class ApplicationCursor(
 ) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
-            buf.appendAscii("[?1h")
+            buf.appendAscii("\u001b[?1h")
         } else {
-            buf.appendAscii("[?1l")
+            buf.appendAscii("\u001b[?1l")
         }
     }
 }
@@ -313,9 +313,9 @@ internal class BracketedPaste(
 ) : BufWrite {
     override fun writeBuf(buf: MutableList<Byte>) {
         if (state) {
-            buf.appendAscii("[?2004h")
+            buf.appendAscii("\u001b[?2004h")
         } else {
-            buf.appendAscii("[?2004l")
+            buf.appendAscii("\u001b[?2004l")
         }
     }
 }
@@ -338,15 +338,15 @@ internal class MouseProtocolModeWriter(
             MouseProtocolMode.None ->
                 when (prev) {
                     MouseProtocolMode.None -> { /* unreachable */ }
-                    MouseProtocolMode.Press -> buf.appendAscii("[?9l")
-                    MouseProtocolMode.PressRelease -> buf.appendAscii("[?1000l")
-                    MouseProtocolMode.ButtonMotion -> buf.appendAscii("[?1002l")
-                    MouseProtocolMode.AnyMotion -> buf.appendAscii("[?1003l")
+                    MouseProtocolMode.Press -> buf.appendAscii("\u001b[?9l")
+                    MouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000l")
+                    MouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002l")
+                    MouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003l")
                 }
-            MouseProtocolMode.Press -> buf.appendAscii("[?9h")
-            MouseProtocolMode.PressRelease -> buf.appendAscii("[?1000h")
-            MouseProtocolMode.ButtonMotion -> buf.appendAscii("[?1002h")
-            MouseProtocolMode.AnyMotion -> buf.appendAscii("[?1003h")
+            MouseProtocolMode.Press -> buf.appendAscii("\u001b[?9h")
+            MouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000h")
+            MouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002h")
+            MouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003h")
         }
     }
 }
@@ -369,11 +369,11 @@ internal class MouseProtocolEncodingWriter(
             MouseProtocolEncoding.Default ->
                 when (prev) {
                     MouseProtocolEncoding.Default -> { /* unreachable */ }
-                    MouseProtocolEncoding.Utf8 -> buf.appendAscii("[?1005l")
-                    MouseProtocolEncoding.Sgr -> buf.appendAscii("[?1006l")
+                    MouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005l")
+                    MouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006l")
                 }
-            MouseProtocolEncoding.Utf8 -> buf.appendAscii("[?1005h")
-            MouseProtocolEncoding.Sgr -> buf.appendAscii("[?1006h")
+            MouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005h")
+            MouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006h")
         }
     }
 }
