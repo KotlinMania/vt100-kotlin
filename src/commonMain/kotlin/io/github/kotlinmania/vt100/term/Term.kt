@@ -15,6 +15,10 @@ internal interface BufWrite {
 
 /** Clears the entire screen and moves the cursor home. */
 internal class ClearScreen : BufWrite {
+    internal companion object {
+        internal fun default(): ClearScreen = ClearScreen()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\u001b[H\u001b[J")
     }
@@ -22,6 +26,10 @@ internal class ClearScreen : BufWrite {
 
 /** Clears from the cursor to the end of the current row. */
 internal class ClearRowForward : BufWrite {
+    internal companion object {
+        internal fun default(): ClearRowForward = ClearRowForward()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\u001b[K")
     }
@@ -29,6 +37,10 @@ internal class ClearRowForward : BufWrite {
 
 /** Writes a CR/LF newline pair. */
 internal class Crlf : BufWrite {
+    internal companion object {
+        internal fun default(): Crlf = Crlf()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\r\n")
     }
@@ -36,6 +48,10 @@ internal class Crlf : BufWrite {
 
 /** Writes a single backspace control byte. */
 internal class Backspace : BufWrite {
+    internal companion object {
+        internal fun default(): Backspace = Backspace()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.add(0x08)
     }
@@ -43,6 +59,10 @@ internal class Backspace : BufWrite {
 
 /** Saves the current cursor position. */
 internal class SaveCursor : BufWrite {
+    internal companion object {
+        internal fun default(): SaveCursor = SaveCursor()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\u001b7")
     }
@@ -50,6 +70,10 @@ internal class SaveCursor : BufWrite {
 
 /** Restores the cursor to the previously saved position. */
 internal class RestoreCursor : BufWrite {
+    internal companion object {
+        internal fun default(): RestoreCursor = RestoreCursor()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\u001b8")
     }
@@ -81,6 +105,10 @@ internal class MoveTo(
 
 /** Clears any active SGR text attributes. */
 internal class ClearAttrs : BufWrite {
+    internal companion object {
+        internal fun default(): ClearAttrs = ClearAttrs()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         buf.appendAscii("\u001b[m")
     }
@@ -333,6 +361,15 @@ internal class MouseProtocolModeWriter(
     private val mode: MouseProtocolMode = MouseProtocolMode.None,
     private val prev: MouseProtocolMode = MouseProtocolMode.None,
 ) : BufWrite {
+    internal companion object {
+        internal fun new(
+            mode: MouseProtocolMode,
+            prev: MouseProtocolMode,
+        ): MouseProtocolModeWriter = MouseProtocolModeWriter(mode, prev)
+
+        internal fun default(): MouseProtocolModeWriter = MouseProtocolModeWriter()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         if (mode == prev) {
             return
@@ -364,6 +401,15 @@ internal class MouseProtocolEncodingWriter(
     private val encoding: MouseProtocolEncoding = MouseProtocolEncoding.Default,
     private val prev: MouseProtocolEncoding = MouseProtocolEncoding.Default,
 ) : BufWrite {
+    internal companion object {
+        internal fun new(
+            encoding: MouseProtocolEncoding,
+            prev: MouseProtocolEncoding,
+        ): MouseProtocolEncodingWriter = MouseProtocolEncodingWriter(encoding, prev)
+
+        internal fun default(): MouseProtocolEncodingWriter = MouseProtocolEncodingWriter()
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         if (encoding == prev) {
             return

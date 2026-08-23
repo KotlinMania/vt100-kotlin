@@ -5,13 +5,13 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 10/10 (100.0%)
-- **Function parity:** 230/245 matched (target 346) — 93.9%
-- **Class/type parity:** 31/33 matched (target 43) — 93.9%
-- **Combined symbol parity:** 261/278 matched (target 389) — 93.9%
-- **Average inline-code cosine:** 0.70 (function body across 9 matched files)
-- **Average documentation cosine:** 0.39 (doc text across 9 matched files)
+- **Function parity:** 245/245 matched (target 382) — 100.0%
+- **Class/type parity:** 33/33 matched (target 46) — 100.0%
+- **Combined symbol parity:** 278/278 matched (target 428) — 100.0%
+- **Average inline-code cosine:** 0.80 (function body across 9 matched files)
+- **Average documentation cosine:** 0.40 (doc text across 9 matched files)
 - **Cheat-zeroed Files:** 0
-- **Critical Issues:** 3 files with <0.60 function similarity
+- **Critical Issues:** 1 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -27,29 +27,18 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. parser
-
-- **Target:** `vt100.Parser`
-- **Similarity:** 0.21
-- **Dependents:** 1
-- **Priority Score:** 1071108.0
-- **Functions:** 3/10 matched (target 9)
-- **Missing functions:** `new`, `new_with_callbacks`, `screen_mut`, `callbacks_mut`, `default`, `write`, `flush`
-- **Types:** 1/1 matched (target 3)
-- **Missing types:** _none_
-
-### 2. cell
+### 1. cell
 
 - **Target:** `vt100.Cell`
-- **Similarity:** 0.73
+- **Similarity:** 0.76
 - **Dependents:** 1
-- **Priority Score:** 1012202.7
-- **Functions:** 20/21 matched (target 37)
-- **Missing functions:** `eq`
+- **Priority Score:** 1002202.4
+- **Functions:** 21/21 matched (target 38)
+- **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
 
-### 3. callbacks
+### 2. callbacks
 
 - **Target:** `vt100.Callbacks`
 - **Similarity:** 0.76
@@ -61,41 +50,29 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** _none_
 - **Lint issues:** 28
 
-### 4. term
+### 3. parser
 
-- **Target:** `term.Term`
-- **Similarity:** 0.56
-- **Dependents:** 0
-- **Priority Score:** 53004.4
-- **Functions:** 7/10 matched (target 63)
-- **Missing functions:** `new`, `default`, `extend_itoa`
-- **Types:** 18/20 matched (target 21)
-- **Missing types:** `MouseProtocolMode`, `MouseProtocolEncoding`
+- **Target:** `vt100.Parser`
+- **Similarity:** 0.81
+- **Dependents:** 1
+- **Priority Score:** 1001101.9
+- **Functions:** 10/10 matched (target 20)
+- **Missing functions:** _none_
+- **Types:** 1/1 matched (target 2)
+- **Missing types:** _none_
 
-### 5. screen
+### 4. screen
 
 - **Target:** `vt100.Screen`
-- **Similarity:** 0.88
+- **Similarity:** 0.89
 - **Dependents:** 0
-- **Priority Score:** 29601.2
-- **Functions:** 91/93 matched (target 98)
-- **Missing functions:** `new`, `u16_to_u8`
-- **Types:** 3/3 matched
+- **Priority Score:** 9601.1
+- **Functions:** 93/93 matched (target 107)
+- **Missing functions:** _none_
+- **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
-### 6. perform
-
-- **Target:** `vt100.Perform`
-- **Similarity:** 0.65
-- **Dependents:** 0
-- **Priority Score:** 21103.5
-- **Functions:** 8/10 matched
-- **Missing functions:** `new`, `new_with_callbacks`
-- **Types:** 1/1 matched
-- **Missing types:** _none_
-- **Lint issues:** 3
-
-### 7. grid
+### 5. grid
 
 - **Target:** `grid.Grid`
 - **Similarity:** 0.82
@@ -106,7 +83,18 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
-### 8. row
+### 6. term
+
+- **Target:** `term.Term`
+- **Similarity:** 0.63
+- **Dependents:** 0
+- **Priority Score:** 3003.7
+- **Functions:** 10/10 matched (target 76)
+- **Missing functions:** _none_
+- **Types:** 20/20 matched (target 23)
+- **Missing types:** _none_
+
+### 7. row
 
 - **Target:** `vt100.Row`
 - **Similarity:** 0.82
@@ -117,7 +105,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/1 matched
 - **Missing types:** _none_
 
-### 9. attrs
+### 8. attrs
 
 - **Target:** `vt100.Attrs`
 - **Similarity:** 0.84
@@ -128,6 +116,18 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/2 matched (target 6)
 - **Missing types:** _none_
 
+### 9. perform
+
+- **Target:** `vt100.Perform`
+- **Similarity:** 0.83
+- **Dependents:** 0
+- **Priority Score:** 1101.7
+- **Functions:** 10/10 matched (target 12)
+- **Missing functions:** _none_
+- **Types:** 1/1 matched
+- **Missing types:** _none_
+- **Lint issues:** 3
+
 ### 10. lib
 
 - **Target:** `vt100.Lib [STUB]`
@@ -136,7 +136,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Priority Score:** 0.0
 - **Functions:** 0/0 matched
 - **Missing functions:** _none_
-- **Types:** 0/0 matched
+- **Types:** 0/0 matched (target 1)
 - **Missing types:** _none_
 
 ## Success Criteria
