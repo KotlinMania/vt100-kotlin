@@ -2,9 +2,9 @@
 package io.github.kotlinmania.vt100.term
 
 import io.github.kotlinmania.vt100.Color
-import io.github.kotlinmania.vt100.MouseProtocolEncoding
-import io.github.kotlinmania.vt100.MouseProtocolMode
 import io.github.kotlinmania.vt100.grid.Pos
+import io.github.kotlinmania.vt100.MouseProtocolEncoding as ScreenMouseProtocolEncoding
+import io.github.kotlinmania.vt100.MouseProtocolMode as ScreenMouseProtocolMode
 
 // upstream: read all of this from terminfo
 
@@ -357,17 +357,17 @@ internal class BracketedPaste(
  * [prev] to [mode]. Writing nothing when the two are equal preserves the
  * upstream invariant.
  */
-internal class MouseProtocolModeWriter(
-    private val mode: MouseProtocolMode = MouseProtocolMode.None,
-    private val prev: MouseProtocolMode = MouseProtocolMode.None,
+internal class MouseProtocolMode(
+    private val mode: ScreenMouseProtocolMode = ScreenMouseProtocolMode.None,
+    private val prev: ScreenMouseProtocolMode = ScreenMouseProtocolMode.None,
 ) : BufWrite {
     internal companion object {
         internal fun new(
-            mode: MouseProtocolMode,
-            prev: MouseProtocolMode,
-        ): MouseProtocolModeWriter = MouseProtocolModeWriter(mode, prev)
+            mode: ScreenMouseProtocolMode,
+            prev: ScreenMouseProtocolMode,
+        ): MouseProtocolMode = MouseProtocolMode(mode, prev)
 
-        internal fun default(): MouseProtocolModeWriter = MouseProtocolModeWriter()
+        internal fun default(): MouseProtocolMode = MouseProtocolMode()
     }
 
     override fun writeBuf(buf: MutableList<Byte>) {
@@ -376,18 +376,18 @@ internal class MouseProtocolModeWriter(
         }
 
         when (mode) {
-            MouseProtocolMode.None ->
+            ScreenMouseProtocolMode.None ->
                 when (prev) {
-                    MouseProtocolMode.None -> { /* unreachable */ }
-                    MouseProtocolMode.Press -> buf.appendAscii("\u001b[?9l")
-                    MouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000l")
-                    MouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002l")
-                    MouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003l")
+                    ScreenMouseProtocolMode.None -> { /* unreachable */ }
+                    ScreenMouseProtocolMode.Press -> buf.appendAscii("\u001b[?9l")
+                    ScreenMouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000l")
+                    ScreenMouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002l")
+                    ScreenMouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003l")
                 }
-            MouseProtocolMode.Press -> buf.appendAscii("\u001b[?9h")
-            MouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000h")
-            MouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002h")
-            MouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003h")
+            ScreenMouseProtocolMode.Press -> buf.appendAscii("\u001b[?9h")
+            ScreenMouseProtocolMode.PressRelease -> buf.appendAscii("\u001b[?1000h")
+            ScreenMouseProtocolMode.ButtonMotion -> buf.appendAscii("\u001b[?1002h")
+            ScreenMouseProtocolMode.AnyMotion -> buf.appendAscii("\u001b[?1003h")
         }
     }
 }
@@ -397,17 +397,17 @@ internal class MouseProtocolModeWriter(
  * from [prev] to [encoding]. Writing nothing when the two are equal preserves
  * the upstream invariant.
  */
-internal class MouseProtocolEncodingWriter(
-    private val encoding: MouseProtocolEncoding = MouseProtocolEncoding.Default,
-    private val prev: MouseProtocolEncoding = MouseProtocolEncoding.Default,
+internal class MouseProtocolEncoding(
+    private val encoding: ScreenMouseProtocolEncoding = ScreenMouseProtocolEncoding.Default,
+    private val prev: ScreenMouseProtocolEncoding = ScreenMouseProtocolEncoding.Default,
 ) : BufWrite {
     internal companion object {
         internal fun new(
-            encoding: MouseProtocolEncoding,
-            prev: MouseProtocolEncoding,
-        ): MouseProtocolEncodingWriter = MouseProtocolEncodingWriter(encoding, prev)
+            encoding: ScreenMouseProtocolEncoding,
+            prev: ScreenMouseProtocolEncoding,
+        ): MouseProtocolEncoding = MouseProtocolEncoding(encoding, prev)
 
-        internal fun default(): MouseProtocolEncodingWriter = MouseProtocolEncodingWriter()
+        internal fun default(): MouseProtocolEncoding = MouseProtocolEncoding()
     }
 
     override fun writeBuf(buf: MutableList<Byte>) {
@@ -416,14 +416,14 @@ internal class MouseProtocolEncodingWriter(
         }
 
         when (encoding) {
-            MouseProtocolEncoding.Default ->
+            ScreenMouseProtocolEncoding.Default ->
                 when (prev) {
-                    MouseProtocolEncoding.Default -> { /* unreachable */ }
-                    MouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005l")
-                    MouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006l")
+                    ScreenMouseProtocolEncoding.Default -> { /* unreachable */ }
+                    ScreenMouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005l")
+                    ScreenMouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006l")
                 }
-            MouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005h")
-            MouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006h")
+            ScreenMouseProtocolEncoding.Utf8 -> buf.appendAscii("\u001b[?1005h")
+            ScreenMouseProtocolEncoding.Sgr -> buf.appendAscii("\u001b[?1006h")
         }
     }
 }

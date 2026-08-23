@@ -15,7 +15,7 @@ public sealed interface Color {
         }
     }
 
-    /** An RGB terminal color. The parameters are red, green, and blue. */
+    /** An RGB terminal color. The parameters are (red, green, blue). */
     public data class Rgb(
         public val red: Int,
         public val green: Int,
@@ -36,33 +36,44 @@ private const val TEXT_MODE_ITALIC: Int = 0b0000_0100
 private const val TEXT_MODE_UNDERLINE: Int = 0b0000_1000
 private const val TEXT_MODE_INVERSE: Int = 0b0001_0000
 
+/** Represents character drawing attributes such as colors and text modes. */
 internal data class Attrs(
+    /** The foreground color. */
     internal var fgColor: Color = Color.Default,
+    /** The background color. */
     internal var bgColor: Color = Color.Default,
+    /** The bitmask of active text modes. */
     internal var mode: Int = 0,
 ) {
+    /** Returns whether the bold text attribute is set. */
     internal fun bold(): Boolean = mode and TEXT_MODE_BOLD != 0
 
+    /** Returns whether the dim text attribute is set. */
     internal fun dim(): Boolean = mode and TEXT_MODE_DIM != 0
 
     private fun intensity(): Int = mode and TEXT_MODE_INTENSITY
 
+    /** Sets the bold text attribute. */
     internal fun setBold() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
         mode = mode or TEXT_MODE_BOLD
     }
 
+    /** Sets the dim text attribute. */
     internal fun setDim() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
         mode = mode or TEXT_MODE_DIM
     }
 
+    /** Clears bold and dim intensity attributes. */
     internal fun setNormalIntensity() {
         mode = mode and TEXT_MODE_INTENSITY.inv()
     }
 
+    /** Returns whether the italic text attribute is set. */
     internal fun italic(): Boolean = mode and TEXT_MODE_ITALIC != 0
 
+    /** Sets or clears the italic text attribute. */
     internal fun setItalic(italic: Boolean) {
         mode =
             if (italic) {
@@ -72,8 +83,10 @@ internal data class Attrs(
             }
     }
 
+    /** Returns whether the underline text attribute is set. */
     internal fun underline(): Boolean = mode and TEXT_MODE_UNDERLINE != 0
 
+    /** Sets or clears the underline text attribute. */
     internal fun setUnderline(underline: Boolean) {
         mode =
             if (underline) {
@@ -83,8 +96,10 @@ internal data class Attrs(
             }
     }
 
+    /** Returns whether the inverse text attribute is set. */
     internal fun inverse(): Boolean = mode and TEXT_MODE_INVERSE != 0
 
+    /** Sets or clears the inverse text attribute. */
     internal fun setInverse(inverse: Boolean) {
         mode =
             if (inverse) {

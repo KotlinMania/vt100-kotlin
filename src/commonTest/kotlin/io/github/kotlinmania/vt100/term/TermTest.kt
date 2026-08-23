@@ -2,12 +2,12 @@
 package io.github.kotlinmania.vt100.term
 
 import io.github.kotlinmania.vt100.Color
-import io.github.kotlinmania.vt100.MouseProtocolEncoding
-import io.github.kotlinmania.vt100.MouseProtocolMode
 import io.github.kotlinmania.vt100.grid.Pos
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import io.github.kotlinmania.vt100.MouseProtocolEncoding as ScreenMouseProtocolEncoding
+import io.github.kotlinmania.vt100.MouseProtocolMode as ScreenMouseProtocolMode
 
 private fun writeOf(w: BufWrite): ByteArray {
     val buf = mutableListOf<Byte>()
@@ -180,9 +180,9 @@ class TermTest {
     fun mouseProtocolModeSameStateWritesNothing() {
         assertTrue(
             writeOf(
-                MouseProtocolModeWriter(
-                    mode = MouseProtocolMode.Press,
-                    prev = MouseProtocolMode.Press,
+                MouseProtocolMode(
+                    mode = ScreenMouseProtocolMode.Press,
+                    prev = ScreenMouseProtocolMode.Press,
                 ),
             ).isEmpty(),
         )
@@ -194,9 +194,9 @@ class TermTest {
         assertEquals(
             expected.toList(),
             writeOf(
-                MouseProtocolModeWriter(
-                    mode = MouseProtocolMode.None,
-                    prev = MouseProtocolMode.Press,
+                MouseProtocolMode(
+                    mode = ScreenMouseProtocolMode.None,
+                    prev = ScreenMouseProtocolMode.Press,
                 ),
             ).toList(),
         )
@@ -208,9 +208,9 @@ class TermTest {
         assertEquals(
             expected.toList(),
             writeOf(
-                MouseProtocolModeWriter(
-                    mode = MouseProtocolMode.PressRelease,
-                    prev = MouseProtocolMode.None,
+                MouseProtocolMode(
+                    mode = ScreenMouseProtocolMode.PressRelease,
+                    prev = ScreenMouseProtocolMode.None,
                 ),
             ).toList(),
         )
@@ -220,9 +220,9 @@ class TermTest {
     fun mouseProtocolEncodingSameWritesNothing() {
         assertTrue(
             writeOf(
-                MouseProtocolEncodingWriter(
-                    encoding = MouseProtocolEncoding.Utf8,
-                    prev = MouseProtocolEncoding.Utf8,
+                MouseProtocolEncoding(
+                    encoding = ScreenMouseProtocolEncoding.Utf8,
+                    prev = ScreenMouseProtocolEncoding.Utf8,
                 ),
             ).isEmpty(),
         )
@@ -234,9 +234,9 @@ class TermTest {
         assertEquals(
             expected.toList(),
             writeOf(
-                MouseProtocolEncodingWriter(
-                    encoding = MouseProtocolEncoding.Sgr,
-                    prev = MouseProtocolEncoding.Default,
+                MouseProtocolEncoding(
+                    encoding = ScreenMouseProtocolEncoding.Sgr,
+                    prev = ScreenMouseProtocolEncoding.Default,
                 ),
             ).toList(),
         )
