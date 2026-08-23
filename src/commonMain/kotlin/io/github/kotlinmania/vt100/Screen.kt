@@ -10,8 +10,6 @@ import io.github.kotlinmania.vt100.term.ApplicationKeypad
 import io.github.kotlinmania.vt100.term.BracketedPaste
 import io.github.kotlinmania.vt100.term.ClearAttrs
 import io.github.kotlinmania.vt100.term.HideCursor
-import io.github.kotlinmania.vt100.term.MouseProtocolEncodingWriter
-import io.github.kotlinmania.vt100.term.MouseProtocolModeWriter
 
 /** The xterm mouse handling mode currently in use. */
 public enum class MouseProtocolMode {
@@ -90,45 +88,54 @@ public class Screen internal constructor(
      */
     public constructor(rows: Int, cols: Int, scrollbackLen: Int = 0) : this(Size(rows, cols), scrollbackLen)
 
-    /**
-     * Changes the size of the screen.
-     *
-     * This will not resize the scrollback buffer. If rows is larger than the
-     * previous row count, rows will be taken from the bottom of the scrollback
-     * buffer and added to the bottom of the screen. If rows is smaller than the
-     * previous row count, rows will be removed from the bottom of the screen and
-     * added to the bottom of the scrollback buffer.
-     */
+    /** Resizes the terminal. */
     public fun setSize(rows: Int, cols: Int) {
         grid.setSize(Size(rows, cols))
         alternateGrid.setSize(Size(rows, cols))
     }
 
-    /** Returns the current size of the screen as (rows, cols). */
+    /**
+     * Returns the current size of the terminal.
+     *
+     * The return value will be `(rows, cols)`.
+     */
     public fun size(): Pair<Int, Int> {
         val s = grid().size()
         return Pair(s.rows, s.cols)
     }
 
     /**
-     * Changes the number of scrollback lines the screen will save.
+     * Scrolls to the given position in the scrollback.
      *
-     * If scrollback is smaller than the current number of scrollback lines, the
-     * oldest scrollback lines will be dropped.
+     * This position indicates the offset from the top of the screen, and
+     * should be `0` to put the normal screen in view.
+     *
+     * This affects the return values of methods called on the screen: for
+     * instance, `screen.cell(0, 0)` will return the top left corner of the
+     * screen after taking the scrollback offset into account.
+     *
+     * The value given will be clamped to the actual size of the scrollback.
      */
     public fun setScrollback(rows: Int) {
         gridMut().setScrollback(rows)
     }
 
-    /** Returns the current position in the scrollback. */
+    /**
+     * Returns the current position in the scrollback.
+     *
+     * This position indicates the offset from the top of the screen, and is
+     * `0` when the normal screen is in view.
+     */
     public fun scrollback(): Int = grid().scrollback()
 
     /** Returns the maximum number of scrollback lines. */
     public fun scrollbackLen(): Int = grid().scrollbackLen()
 
     /**
-     * Returns the entire contents of the screen (not including scrollback) as a
-     * string.
+     * Returns the text contents of the terminal.
+     *
+     * This will not include any formatting information, and will be in plain
+     * text format.
      */
     public fun contents(): String {
         val contents = StringBuilder()
@@ -145,8 +152,13 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns the contents of each row on the screen (not including scrollback)
-     * as a sequence of strings, from the column [start] up to the width [width].
+     * Returns the text contents of the terminal by row, restricted to the
+     * given subset of columns.
+     *
+     * This will not include any formatting information, and will be in plain
+     * text format.
+     *
+     * Newlines will not be included.
      */
     public fun rows(start: Int, width: Int): Sequence<String> =
         grid().visibleRows().map { row ->
@@ -156,8 +168,12 @@ public class Screen internal constructor(
         }
 
     /**
-     * Returns the contents of the screen (not including scrollback) between the
-     * given coordinates.
+     * Returns the text contents of the terminal logically between two cells.
+     * This will include the remainder of the starting row after `startCol`,
+     * followed by the entire contents of the rows between `startRow` and
+     * `endRow`, followed by the beginning of the `endRow` up until
+     * `endCol`. This is useful for things like determining the contents of
+     * a clipboard selection.
      */
     public fun contentsBetween(startRow: Int, startCol: Int, endRow: Int, endCol: Int): String =
         when {
@@ -201,8 +217,9 @@ public class Screen internal constructor(
         }
 
     /**
-     * Returns a formatted representation of the entire screen (including cursor
-     * positioning and attributes).
+     * Return escape codes sufficient to reproduce the entire contents of the
+     * current terminal state. This is a convenience wrapper around
+     * [contentsFormatted] and [inputModeFormatted].
      */
     public fun stateFormatted(): ByteArray {
         val contents = mutableListOf<Byte>()
@@ -212,8 +229,9 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns a formatted representation of the difference between the entire
-     * current screen and a previous screen state.
+     * Return escape codes sufficient to turn the terminal state of the
+     * screen `prev` into the current terminal state. This is a convenience
+     * wrapper around [contentsDiff] and [inputModeDiff].
      */
     public fun stateDiff(prev: Screen): ByteArray {
         val contents = mutableListOf<Byte>()
@@ -223,8 +241,11 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns a formatted representation of the current screen contents
-     * (including cursor positioning and attributes).
+     * Returns the formatted visible contents of the terminal.
+     *
+     * Formatting information will be included inline as terminal escape
+     * codes. The result will be suitable for feeding directly to a raw
+     * terminal parser, and will result in the same visual output.
      */
     public fun contentsFormatted(): ByteArray {
         val contents = mutableListOf<Byte>()
@@ -239,8 +260,16 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns a formatted representation of each row on the screen (not
-     * including scrollback) from column [start] up to width [width].
+     * Returns the formatted visible contents of the terminal by row,
+     * restricted to the given subset of columns.
+     *
+     * Formatting information will be included inline as terminal escape
+     * codes. The result will be suitable for feeding directly to a raw
+     * terminal parser, and will result in the same visual output.
+     *
+     * You are responsible for positioning the cursor before printing each
+     * row, and the final cursor position after displaying each row is
+     * unspecified.
      */
     public fun rowsFormatted(start: Int, width: Int): Sequence<ByteArray> =
         sequence {
@@ -265,8 +294,16 @@ public class Screen internal constructor(
         }
 
     /**
-     * Returns a formatted representation of the difference between the screen
-     * contents of the current screen and a previous screen.
+     * Returns a terminal byte stream sufficient to turn the visible contents
+     * of the screen described by `prev` into the visible contents of the
+     * screen described by `this`.
+     *
+     * The result of rendering `prev.contentsFormatted()` followed by
+     * `this.contentsDiff(prev)` should be equivalent to the result of
+     * rendering `this.contentsFormatted()`. This is primarily useful when
+     * you already have a terminal parser whose state is described by `prev`,
+     * since the diff will likely require less memory and cause less
+     * flickering than redrawing the entire screen contents.
      */
     public fun contentsDiff(prev: Screen): ByteArray {
         val contents = mutableListOf<Byte>()
@@ -283,36 +320,45 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns a formatted representation of the difference between each row on
-     * the screen and a previous screen from column [start] up to width [width].
+     * Returns a sequence of terminal byte streams sufficient to turn the
+     * visible contents of the subset of each row from `prev` (as described
+     * by `start` and `width`) into the visible contents of the corresponding
+     * row subset in `this`.
+     *
+     * You are responsible for positioning the cursor before printing each
+     * row, and the final cursor position after displaying each row is
+     * unspecified.
      */
     public fun rowsDiff(prev: Screen, start: Int, width: Int): Sequence<ByteArray> =
         sequence {
-            val rows = grid().visibleRows().toList()
-            val prevRows = prev.grid().visibleRows().toList()
-            val count = minOf(rows.size, prevRows.size)
-            var wrapping = false
-            var prevWrapping = false
-            for (i in 0 until count) {
+            for ((i, pair) in grid().visibleRows().zip(prev.grid().visibleRows()).withIndex()) {
+                val (row, prevRow) = pair
                 val contents = mutableListOf<Byte>()
-                rows[i].writeContentsDiff(
-                    contents = contents,
-                    prev = prevRows[i],
-                    start = start,
-                    width = width,
-                    row = i,
-                    wrapping = wrapping,
-                    prevWrapping = prevWrapping,
-                    prevPos = Pos(row = i, col = start),
-                    prevAttrs = Attrs(),
+                row.writeContentsDiff(
+                    contents,
+                    prevRow,
+                    start,
+                    width,
+                    i,
+                    false,
+                    false,
+                    Pos(i, start),
+                    Attrs(),
                 )
-                wrapping = rows[i].wrapped()
-                prevWrapping = prevRows[i].wrapped()
                 yield(contents.toByteArray())
             }
         }
 
-    /** Returns a formatted representation of the current terminal input mode settings. */
+    /**
+     * Returns terminal escape sequences sufficient to set the current
+     * terminal's input modes.
+     *
+     * Supported modes are:
+     * * application keypad
+     * * application cursor
+     * * bracketed paste
+     * * xterm mouse support
+     */
     public fun inputModeFormatted(): ByteArray {
         val contents = mutableListOf<Byte>()
         writeInputModeFormatted(contents)
@@ -323,11 +369,19 @@ public class Screen internal constructor(
         ApplicationKeypad(mode(MODE_APPLICATION_KEYPAD)).writeBuf(contents)
         ApplicationCursor(mode(MODE_APPLICATION_CURSOR)).writeBuf(contents)
         BracketedPaste(mode(MODE_BRACKETED_PASTE)).writeBuf(contents)
-        MouseProtocolModeWriter(mouseProtocolMode, MouseProtocolMode.None).writeBuf(contents)
-        MouseProtocolEncodingWriter(mouseProtocolEncoding, MouseProtocolEncoding.Default).writeBuf(contents)
+        io.github.kotlinmania.vt100.term
+            .MouseProtocolMode(mouseProtocolMode, MouseProtocolMode.None)
+            .writeBuf(contents)
+        io.github.kotlinmania.vt100.term
+            .MouseProtocolEncoding(mouseProtocolEncoding, MouseProtocolEncoding.Default)
+            .writeBuf(contents)
     }
 
-    /** Returns a formatted representation of the difference between input modes. */
+    /**
+     * Returns terminal escape sequences sufficient to change the previous
+     * terminal's input modes to the input modes enabled in the current
+     * terminal.
+     */
     public fun inputModeDiff(prev: Screen): ByteArray {
         val contents = mutableListOf<Byte>()
         writeInputModeDiff(contents, prev)
@@ -344,11 +398,33 @@ public class Screen internal constructor(
         if (mode(MODE_BRACKETED_PASTE) != prev.mode(MODE_BRACKETED_PASTE)) {
             BracketedPaste(mode(MODE_BRACKETED_PASTE)).writeBuf(contents)
         }
-        MouseProtocolModeWriter(mouseProtocolMode, prev.mouseProtocolMode).writeBuf(contents)
-        MouseProtocolEncodingWriter(mouseProtocolEncoding, prev.mouseProtocolEncoding).writeBuf(contents)
+        io.github.kotlinmania.vt100.term
+            .MouseProtocolMode(mouseProtocolMode, prev.mouseProtocolMode)
+            .writeBuf(contents)
+        io.github.kotlinmania.vt100.term
+            .MouseProtocolEncoding(mouseProtocolEncoding, prev.mouseProtocolEncoding)
+            .writeBuf(contents)
     }
 
-    /** Returns a formatted representation of the currently active SGR attributes. */
+    /**
+     * Returns terminal escape sequences sufficient to set the current
+     * terminal's drawing attributes.
+     *
+     * Supported drawing attributes are:
+     * * fgcolor
+     * * bgcolor
+     * * bold
+     * * dim
+     * * italic
+     * * underline
+     * * inverse
+     *
+     * This is not typically necessary, since [contentsFormatted] will leave
+     * the current active drawing attributes in the correct state, but this
+     * can be useful in the case of drawing additional things on top of a
+     * terminal output, since you will need to restore the terminal state
+     * without the terminal contents necessarily being the same.
+     */
     public fun attributesFormatted(): ByteArray {
         val contents = mutableListOf<Byte>()
         writeAttributesFormatted(contents)
@@ -360,13 +436,33 @@ public class Screen internal constructor(
         attrs.writeEscapeCodeDiff(contents, Attrs())
     }
 
-    /** Returns the current cursor position as (row, col). */
+    /**
+     * Returns the current cursor position of the terminal.
+     *
+     * The return value will be `(row, col)`.
+     */
     public fun cursorPosition(): Pair<Int, Int> {
         val pos = grid().pos()
         return Pair(pos.row, pos.col)
     }
 
-    /** Returns a formatted representation of the cursor state (position and visibility). */
+    /**
+     * Returns terminal escape sequences sufficient to set the current
+     * cursor state of the terminal.
+     *
+     * This is not typically necessary, since [contentsFormatted] will leave
+     * the cursor in the correct state, but this can be useful in the case of
+     * drawing additional things on top of a terminal output, since you will
+     * need to restore the terminal state without the terminal contents
+     * necessarily being the same.
+     *
+     * Note that the bytes returned by this function may alter the active
+     * drawing attributes, because it may require redrawing existing cells in
+     * order to position the cursor correctly (for instance, in the case
+     * where the cursor is past the end of a row). Therefore, you should
+     * ensure to reset the active drawing attributes if necessary after
+     * processing this data, for instance by using [attributesFormatted].
+     */
     public fun cursorStateFormatted(): ByteArray {
         val contents = mutableListOf<Byte>()
         writeCursorStateFormatted(contents)
@@ -379,33 +475,32 @@ public class Screen internal constructor(
     }
 
     /**
-     * Returns the cell at the given position, or `null` if the position is out of
-     * bounds.
+     * Returns the [Cell] object at the given location in the terminal, if it exists.
      */
     public fun cell(row: Int, col: Int): Cell? = grid().visibleCell(Pos(row, col))
 
-    /** Returns whether the given row is wrapped onto the next row. */
+    /** Returns whether the text in row [row] should wrap to the next line. */
     public fun rowWrapped(row: Int): Boolean = grid().visibleRow(row)?.wrapped() ?: false
 
-    /** Returns whether the alternate screen buffer is currently active. */
+    /** Returns whether the alternate screen is currently in use. */
     public fun alternateScreen(): Boolean = mode(MODE_ALTERNATE_SCREEN)
 
-    /** Returns whether the application keypad mode is enabled. */
+    /** Returns whether the terminal should be in application keypad mode. */
     public fun applicationKeypad(): Boolean = mode(MODE_APPLICATION_KEYPAD)
 
-    /** Returns whether the application cursor mode is enabled. */
+    /** Returns whether the terminal should be in application cursor mode. */
     public fun applicationCursor(): Boolean = mode(MODE_APPLICATION_CURSOR)
 
-    /** Returns whether the cursor is hidden. */
+    /** Returns whether the terminal should be in hide cursor mode. */
     public fun hideCursor(): Boolean = mode(MODE_HIDE_CURSOR)
 
-    /** Returns whether bracketed paste mode is enabled. */
+    /** Returns whether the terminal should be in bracketed paste mode. */
     public fun bracketedPaste(): Boolean = mode(MODE_BRACKETED_PASTE)
 
-    /** Returns the current mouse protocol mode. */
+    /** Returns the currently active [MouseProtocolMode]. */
     public fun mouseProtocolMode(): MouseProtocolMode = mouseProtocolMode
 
-    /** Returns the current mouse protocol encoding. */
+    /** Returns the currently active [MouseProtocolEncoding]. */
     public fun mouseProtocolEncoding(): MouseProtocolEncoding = mouseProtocolEncoding
 
     /** Returns the currently active foreground color. */
@@ -414,19 +509,34 @@ public class Screen internal constructor(
     /** Returns the currently active background color. */
     public fun bgcolor(): Color = attrs.bgColor
 
-    /** Returns whether bold text attribute is currently active. */
+    /**
+     * Returns whether newly drawn text should be rendered with the bold text
+     * attribute.
+     */
     public fun bold(): Boolean = attrs.bold()
 
-    /** Returns whether dim text attribute is currently active. */
+    /**
+     * Returns whether newly drawn text should be rendered with the dim text
+     * attribute.
+     */
     public fun dim(): Boolean = attrs.dim()
 
-    /** Returns whether italic text attribute is currently active. */
+    /**
+     * Returns whether newly drawn text should be rendered with the italic
+     * text attribute.
+     */
     public fun italic(): Boolean = attrs.italic()
 
-    /** Returns whether underline text attribute is currently active. */
+    /**
+     * Returns whether newly drawn text should be rendered with the
+     * underlined text attribute.
+     */
     public fun underline(): Boolean = attrs.underline()
 
-    /** Returns whether inverse text attribute is currently active. */
+    /**
+     * Returns whether newly drawn text should be rendered with the inverse
+     * text attribute.
+     */
     public fun inverse(): Boolean = attrs.inverse()
 
     public fun copy(): Screen {

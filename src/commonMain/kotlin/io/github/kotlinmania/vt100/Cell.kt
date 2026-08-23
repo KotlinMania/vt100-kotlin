@@ -115,19 +115,34 @@ public class Cell internal constructor() {
     /** Returns the background color of the cell. */
     public fun bgcolor(): Color = attrs.bgColor
 
-    /** Returns whether the cell should be rendered with the bold text attribute. */
+    /**
+     * Returns whether the cell should be rendered with the bold text
+     * attribute.
+     */
     public fun bold(): Boolean = attrs.bold()
 
-    /** Returns whether the cell should be rendered with the dim text attribute. */
+    /**
+     * Returns whether the cell should be rendered with the dim text
+     * attribute.
+     */
     public fun dim(): Boolean = attrs.dim()
 
-    /** Returns whether the cell should be rendered with the italic text attribute. */
+    /**
+     * Returns whether the cell should be rendered with the italic text
+     * attribute.
+     */
     public fun italic(): Boolean = attrs.italic()
 
-    /** Returns whether the cell should be rendered with the underlined text attribute. */
+    /**
+     * Returns whether the cell should be rendered with the underlined text
+     * attribute.
+     */
     public fun underline(): Boolean = attrs.underline()
 
-    /** Returns whether the cell should be rendered with the inverse text attribute. */
+    /**
+     * Returns whether the cell should be rendered with the inverse text
+     * attribute.
+     */
     public fun inverse(): Boolean = attrs.inverse()
 
     public fun copy(): Cell {
