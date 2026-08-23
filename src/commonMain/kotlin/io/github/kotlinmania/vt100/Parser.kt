@@ -393,7 +393,8 @@ internal class VteParser {
                     }
                 }
                 VteState.DcsEntry, VteState.DcsParam, VteState.DcsIntermediate,
-                VteState.DcsPassthrough, VteState.DcsIgnore, VteState.SosPmApcString -> {
+                VteState.DcsPassthrough, VteState.DcsIgnore, VteState.SosPmApcString,
+                -> {
                     when (u) {
                         0x07, 0x9C -> {
                             state = VteState.Ground

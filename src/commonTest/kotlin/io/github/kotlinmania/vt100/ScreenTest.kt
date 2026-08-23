@@ -1,3 +1,4 @@
+// port-lint: tests screen.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test

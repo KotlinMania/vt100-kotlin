@@ -78,50 +78,52 @@ internal class WrappedScreen<CB : Callbacks>(
 
         val firstInter = intermediates.firstOrNull()?.toInt()?.toChar()
         when (firstInter) {
-            null -> when (c) {
-                '@' -> screen.ich(canonicalizeParams1(params, 1))
-                'A' -> screen.cuu(canonicalizeParams1(params, 1))
-                'B' -> screen.cud(canonicalizeParams1(params, 1))
-                'C' -> screen.cuf(canonicalizeParams1(params, 1))
-                'D' -> screen.cub(canonicalizeParams1(params, 1))
-                'E' -> screen.cnl(canonicalizeParams1(params, 1))
-                'F' -> screen.cpl(canonicalizeParams1(params, 1))
-                'G' -> screen.cha(canonicalizeParams1(params, 1))
-                'H' -> screen.cup(canonicalizeParams2(params, 1, 1))
-                'J' -> screen.ed(canonicalizeParams1(params, 0), unhandled)
-                'K' -> screen.el(canonicalizeParams1(params, 0), unhandled)
-                'L' -> screen.il(canonicalizeParams1(params, 1))
-                'M' -> screen.dl(canonicalizeParams1(params, 1))
-                'P' -> screen.dch(canonicalizeParams1(params, 1))
-                'S' -> screen.su(canonicalizeParams1(params, 1))
-                'T' -> screen.sd(canonicalizeParams1(params, 1))
-                'X' -> screen.ech(canonicalizeParams1(params, 1))
-                'd' -> screen.vpa(canonicalizeParams1(params, 1))
-                'm' -> screen.sgr(params, unhandled)
-                'r' -> {
-                    val s = screen.grid().size()
-                    screen.decstbm(canonicalizeParamsDecstbm(params, s))
-                }
-                't' -> {
-                    val op = params.firstOrNull()?.firstOrNull()
-                    if (op == 8) {
-                        val (screenRows, screenCols) = screen.size()
-                        val rows = params.getOrNull(1)?.firstOrNull() ?: screenRows
-                        val cols = params.getOrNull(2)?.firstOrNull() ?: screenCols
-                        callbacks.resize(screen, Pair(rows, cols))
-                    } else {
-                        unhandled(screen)
+            null ->
+                when (c) {
+                    '@' -> screen.ich(canonicalizeParams1(params, 1))
+                    'A' -> screen.cuu(canonicalizeParams1(params, 1))
+                    'B' -> screen.cud(canonicalizeParams1(params, 1))
+                    'C' -> screen.cuf(canonicalizeParams1(params, 1))
+                    'D' -> screen.cub(canonicalizeParams1(params, 1))
+                    'E' -> screen.cnl(canonicalizeParams1(params, 1))
+                    'F' -> screen.cpl(canonicalizeParams1(params, 1))
+                    'G' -> screen.cha(canonicalizeParams1(params, 1))
+                    'H' -> screen.cup(canonicalizeParams2(params, 1, 1))
+                    'J' -> screen.ed(canonicalizeParams1(params, 0), unhandled)
+                    'K' -> screen.el(canonicalizeParams1(params, 0), unhandled)
+                    'L' -> screen.il(canonicalizeParams1(params, 1))
+                    'M' -> screen.dl(canonicalizeParams1(params, 1))
+                    'P' -> screen.dch(canonicalizeParams1(params, 1))
+                    'S' -> screen.su(canonicalizeParams1(params, 1))
+                    'T' -> screen.sd(canonicalizeParams1(params, 1))
+                    'X' -> screen.ech(canonicalizeParams1(params, 1))
+                    'd' -> screen.vpa(canonicalizeParams1(params, 1))
+                    'm' -> screen.sgr(params, unhandled)
+                    'r' -> {
+                        val s = screen.grid().size()
+                        screen.decstbm(canonicalizeParamsDecstbm(params, s))
                     }
+                    't' -> {
+                        val op = params.firstOrNull()?.firstOrNull()
+                        if (op == 8) {
+                            val (screenRows, screenCols) = screen.size()
+                            val rows = params.getOrNull(1)?.firstOrNull() ?: screenRows
+                            val cols = params.getOrNull(2)?.firstOrNull() ?: screenCols
+                            callbacks.resize(screen, Pair(rows, cols))
+                        } else {
+                            unhandled(screen)
+                        }
+                    }
+                    else -> unhandled(screen)
                 }
-                else -> unhandled(screen)
-            }
-            '?' -> when (c) {
-                'J' -> screen.decsed(canonicalizeParams1(params, 0), unhandled)
-                'K' -> screen.decsel(canonicalizeParams1(params, 0), unhandled)
-                'h' -> screen.decset(params, unhandled)
-                'l' -> screen.decrst(params, unhandled)
-                else -> unhandled(screen)
-            }
+            '?' ->
+                when (c) {
+                    'J' -> screen.decsed(canonicalizeParams1(params, 0), unhandled)
+                    'K' -> screen.decsel(canonicalizeParams1(params, 0), unhandled)
+                    'h' -> screen.decset(params, unhandled)
+                    'l' -> screen.decrst(params, unhandled)
+                    else -> unhandled(screen)
+                }
             else -> unhandled(screen)
         }
     }

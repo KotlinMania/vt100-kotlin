@@ -1,4 +1,4 @@
-// port-lint: source grid.rs
+// port-lint: tests grid.rs
 package io.github.kotlinmania.vt100.grid
 
 import io.github.kotlinmania.vt100.Attrs
