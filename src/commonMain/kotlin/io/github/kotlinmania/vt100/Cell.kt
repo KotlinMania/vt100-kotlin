@@ -138,6 +138,9 @@ public class Cell internal constructor() {
         return out
     }
 
+    /** Returns whether this cell equals [other]. */
+    public fun eq(other: Cell): Boolean = equals(other)
+
     override fun equals(other: Any?): Boolean {
         if (other !is Cell) return false
         if (lenAndFlags != other.lenAndFlags) {
