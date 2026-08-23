@@ -20,6 +20,21 @@ internal class WrappedScreen<CB : Callbacks>(
     internal constructor(rows: Int, cols: Int, scrollbackLen: Int, callbacks: CB) :
         this(Screen(Size(rows, cols), scrollbackLen), callbacks)
 
+    internal companion object {
+        internal fun new(
+            rows: Int,
+            cols: Int,
+            scrollbackLen: Int,
+        ): WrappedScreen<DefaultCallbacks> = newWithCallbacks(rows, cols, scrollbackLen, DefaultCallbacks)
+
+        internal fun <CB : Callbacks> newWithCallbacks(
+            rows: Int,
+            cols: Int,
+            scrollbackLen: Int,
+            callbacks: CB,
+        ): WrappedScreen<CB> = WrappedScreen(Screen(Size(rows, cols), scrollbackLen), callbacks)
+    }
+
     internal fun print(c: Char) {
         if (c == '\uFFFD' || c in '\u0080'..'\u009F') {
             callbacks.unhandledChar(screen, c)

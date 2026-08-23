@@ -913,4 +913,19 @@ public class Screen internal constructor(
     internal fun decstbm(bounds: Pair<Int, Int>) {
         gridMut().setScrollRegion(bounds.first - 1, bounds.second - 1)
     }
+
+    internal companion object {
+        /**
+         * Creates a new terminal screen of the given size and with the given amount of
+         * scrollback.
+         */
+        internal fun new(size: Size, scrollbackLen: Int): Screen = Screen(size, scrollbackLen)
+    }
 }
+
+private fun u16ToU8(i: Int): Int? =
+    if (i > 0xFF) {
+        null
+    } else {
+        i and 0xFF
+    }
