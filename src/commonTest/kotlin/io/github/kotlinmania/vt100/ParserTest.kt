@@ -77,4 +77,24 @@ class ParserTest {
 
         assertEquals(2, bellCount)
     }
+
+    @Test
+    fun parserDefaultAndWriteTrait() {
+        val parser = Parser.default()
+        assertEquals(Pair(24, 80), parser.screen().size())
+        assertEquals(Pair(24, 80), parser.screenMut().size())
+        assertNotNull(parser.callbacks())
+        assertNotNull(parser.callbacksMut())
+
+        val written = parser.write("Test".encodeToByteArray())
+        assertEquals(4, written)
+        parser.flush()
+        assertEquals("Test", parser.screen().rows(0, 80).first())
+    }
+
+    @Test
+    fun parserNewWithCallbacks() {
+        val parser = Parser.newWithCallbacks(10, 20, 5, DefaultCallbacks)
+        assertEquals(Pair(10, 20), parser.screen().size())
+    }
 }

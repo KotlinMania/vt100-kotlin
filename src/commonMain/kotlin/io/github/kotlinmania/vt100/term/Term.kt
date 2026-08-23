@@ -62,6 +62,10 @@ internal class MoveTo(
 ) : BufWrite {
     internal constructor(pos: Pos) : this(pos.row, pos.col)
 
+    internal companion object {
+        internal fun new(pos: Pos): MoveTo = MoveTo(pos)
+    }
+
     override fun writeBuf(buf: MutableList<Byte>) {
         if (row == 0 && col == 0) {
             buf.appendAscii("\u001b[H")
@@ -386,4 +390,8 @@ private fun MutableList<Byte>.appendAscii(value: String) {
 
 private fun MutableList<Byte>.appendItoa(value: Int) {
     appendAscii(value.toString())
+}
+
+internal fun extendItoa(buf: MutableList<Byte>, value: Int) {
+    buf.appendItoa(value)
 }
