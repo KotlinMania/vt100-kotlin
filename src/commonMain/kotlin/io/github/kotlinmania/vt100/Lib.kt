@@ -37,6 +37,21 @@
 package io.github.kotlinmania.vt100
 
 /**
- * Marker object representing the root module of the vt100 library.
+ * Marker object and entrypoint for the vt100 library.
  */
-public object Lib
+public object Lib {
+    /**
+     * Default number of terminal rows.
+     */
+    public const val DEFAULT_ROWS: Int = 24
+
+    /**
+     * Default number of terminal columns.
+     */
+    public const val DEFAULT_COLS: Int = 80
+
+    /**
+     * Default number of scrollback lines.
+     */
+    public const val DEFAULT_SCROLLBACK_LEN: Int = 0
+}

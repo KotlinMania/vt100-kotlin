@@ -8,10 +8,10 @@ Based on AST analysis, here are the concrete next steps.
 - **Function parity:** 245/245 matched (target 382) — 100.0%
 - **Class/type parity:** 33/33 matched (target 44) — 100.0%
 - **Combined symbol parity:** 278/278 matched (target 426) — 100.0%
-- **Average inline-code cosine:** 0.78 (function body across 9 matched files)
-- **Average documentation cosine:** 0.36 (doc text across 9 matched files)
+- **Average inline-code cosine:** 0.81 (function body across 10 matched files)
+- **Average documentation cosine:** 0.39 (doc text across 10 matched files)
 - **Cheat-zeroed Files:** 0
-- **Critical Issues:** 1 files with <0.60 function similarity
+- **Critical Issues:** 0 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -128,7 +128,7 @@ Every matched file is listed below with function and type symbol parity.
 
 ### 10. lib
 
-- **Target:** `vt100.Lib [STUB]`
+- **Target:** `vt100.Lib`
 - **Similarity:** 1.00
 - **Dependents:** 0
 - **Priority Score:** 0.0
