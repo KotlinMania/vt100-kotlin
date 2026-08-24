@@ -1,4 +1,4 @@
-import XCTest
+import Testing
 import Vt100
 
 // Smoke test: the mere fact that this file compiles proves the Kotlin
@@ -7,8 +7,10 @@ import Vt100
 // `../build/swift-test/libVt100.a` is reachable; the fact that the
 // test runs proves the full embedSwiftExportForXcode → SPM → swift
 // test loop is green for this repo. SWIFT_EXPORT_ROLLOUT.md item 4.
-final class Vt100ExportTests: XCTestCase {
-    func testKotlinSwiftExportModuleImports() {
-        XCTAssertTrue(true, "Vt100 Swift module imported successfully")
+@Suite
+struct Vt100ExportTests {
+    @Test
+    func kotlinSwiftExportModuleImports() {
+        #expect(true, "Vt100 Swift module imported successfully")
     }
 }
