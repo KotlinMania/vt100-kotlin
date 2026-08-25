@@ -117,4 +117,13 @@ class ScreenTest {
         "67890".forEach { screen.text(it) }
         assertEquals("234", screen.contentsBetween(0, 1, 0, 4))
     }
+
+    @Test
+    fun testU16ToU8() {
+        assertEquals(0, u16ToU8(0))
+        assertEquals(255, u16ToU8(255))
+        kotlin.test.assertNull(u16ToU8(256))
+        kotlin.test.assertNull(u16ToU8(-1))
+    }
 }
+
