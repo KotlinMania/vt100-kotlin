@@ -5,9 +5,9 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 10/10 (100.0%)
-- **Function parity:** 244/245 matched (target 400) — 99.6%
+- **Function parity:** 245/245 matched (target 402) — 100.0%
 - **Class/type parity:** 33/33 matched (target 48) — 100.0%
-- **Combined symbol parity:** 277/278 matched (target 448) — 99.6%
+- **Combined symbol parity:** 278/278 matched (target 450) — 100.0%
 - **Average inline-code cosine:** 0.81 (function body across 10 matched files)
 - **Average documentation cosine:** 0.39 (doc text across 10 matched files)
 - **Cheat-zeroed Files:** 0
@@ -65,9 +65,9 @@ Every matched file is listed below with function and type symbol parity.
 - **Target:** `vt100.Screen`
 - **Similarity:** 0.89
 - **Dependents:** 0
-- **Priority Score:** 19601.1
-- **Functions:** 92/93 matched (target 106)
-- **Missing functions:** `u16_to_u8`
+- **Priority Score:** 9601.1
+- **Functions:** 93/93 matched (target 108)
+- **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
