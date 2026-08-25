@@ -3,6 +3,9 @@ package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.vt100.grid.Size
 
+internal const val BASE64: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+internal const val CLIPBOARD_SELECTOR: String = "cpqs01234567"
+
 private fun isBase64(b: Byte): Boolean {
     val c = b.toInt() and 0xFF
     return (c in 0x41..0x5A) || (c in 0x61..0x7A) || (c in 0x30..0x39) || c == 0x2B || c == 0x2F || c == 0x3D
