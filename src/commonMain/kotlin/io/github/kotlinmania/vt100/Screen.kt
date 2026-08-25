@@ -1032,10 +1032,3 @@ public class Screen internal constructor(
         internal fun new(size: Size, scrollbackLen: Int): Screen = Screen(size, scrollbackLen)
     }
 }
-
-private fun u16ToU8(i: Int): Int? =
-    if (i > 0xFF) {
-        null
-    } else {
-        i and 0xFF
-    }
