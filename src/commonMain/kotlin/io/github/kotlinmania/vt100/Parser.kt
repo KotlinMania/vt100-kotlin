@@ -6,7 +6,7 @@ package io.github.kotlinmania.vt100
  * the terminal contents.
  */
 public class Parser<CB : Callbacks> {
-    private val parser: VteParser = VteParser()
+    private val vteParser: VteParser = VteParser()
     private val screen: WrappedScreen<CB>
 
     /**
@@ -27,7 +27,7 @@ public class Parser<CB : Callbacks> {
      * in-memory terminal state.
      */
     public fun process(bytes: ByteArray) {
-        parser.advance(screen, bytes)
+        vteParser.advance(screen, bytes)
     }
 
     /**
