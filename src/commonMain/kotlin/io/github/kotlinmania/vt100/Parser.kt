@@ -1,4 +1,4 @@
-// port-lint: source parser.rs
+// port-lint: source vt100/src/parser.rs
 package io.github.kotlinmania.vt100
 
 /**
