@@ -1,4 +1,4 @@
-// port-lint: source vt100/src/callbacks.rs
+// port-lint: source callbacks.rs
 package io.github.kotlinmania.vt100
 
 /**
