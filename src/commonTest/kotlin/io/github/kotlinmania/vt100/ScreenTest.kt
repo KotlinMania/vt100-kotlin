@@ -126,4 +126,3 @@ class ScreenTest {
         kotlin.test.assertNull(u16ToU8(-1))
     }
 }
-
