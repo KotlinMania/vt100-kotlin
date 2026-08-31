@@ -1,4 +1,4 @@
-// port-lint: source vt100/src/cell.rs
+// port-lint: source cell.rs
 package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.unicodewidth.unicodeWidth
