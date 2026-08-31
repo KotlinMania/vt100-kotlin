@@ -1,4 +1,4 @@
-// port-lint: source perform.rs
+// port-lint: source vt100/src/perform.rs
 package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.vt100.grid.Size
