@@ -1,4 +1,4 @@
-// port-lint: tests vt100/src/row.rs
+// port-lint: tests row.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test

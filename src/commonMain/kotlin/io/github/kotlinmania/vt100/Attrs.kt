@@ -1,4 +1,4 @@
-// port-lint: source vt100/src/attrs.rs
+// port-lint: source attrs.rs
 package io.github.kotlinmania.vt100
 
 /** Represents a foreground or background color for cells. */
