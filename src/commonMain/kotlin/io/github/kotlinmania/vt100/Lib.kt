@@ -1,4 +1,4 @@
-// port-lint: source lib.rs
+// port-lint: source vt100/src/lib.rs
 /**
  * This library parses a terminal byte stream and provides an in-memory
  * representation of the rendered contents.
