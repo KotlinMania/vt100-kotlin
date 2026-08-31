@@ -1,4 +1,4 @@
-// port-lint: tests vt100/src/term.rs
+// port-lint: tests term.rs
 package io.github.kotlinmania.vt100.term
 
 import io.github.kotlinmania.vt100.Color

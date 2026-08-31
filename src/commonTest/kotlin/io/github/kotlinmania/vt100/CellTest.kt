@@ -1,4 +1,4 @@
-// port-lint: tests vt100/src/cell.rs
+// port-lint: tests cell.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test

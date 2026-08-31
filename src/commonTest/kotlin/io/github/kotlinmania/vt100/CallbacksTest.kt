@@ -1,4 +1,4 @@
-// port-lint: tests vt100/src/callbacks.rs
+// port-lint: tests callbacks.rs
 package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.vt100.grid.Size

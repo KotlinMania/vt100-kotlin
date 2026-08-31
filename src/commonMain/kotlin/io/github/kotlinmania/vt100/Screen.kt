@@ -1,4 +1,4 @@
-// port-lint: source vt100/src/screen.rs
+// port-lint: source screen.rs
 package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.unicodewidth.unicodeWidth
