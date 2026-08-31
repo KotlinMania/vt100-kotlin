@@ -1,4 +1,4 @@
-// port-lint: source vt100/src/row.rs
+// port-lint: source row.rs
 package io.github.kotlinmania.vt100
 
 import io.github.kotlinmania.vt100.grid.Pos

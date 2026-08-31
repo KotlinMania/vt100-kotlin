@@ -1,4 +1,4 @@
-// port-lint: tests vt100/src/parser.rs
+// port-lint: tests parser.rs
 package io.github.kotlinmania.vt100
 
 import kotlin.test.Test
