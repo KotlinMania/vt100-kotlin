@@ -27,9 +27,9 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. vt100.cell
+### 1. cell
 
-- **Target:** `vt100.Cell [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Cell`
 - **Similarity:** 0.76
 - **Dependents:** 1
 - **Priority Score:** 1002202.4
@@ -37,15 +37,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `cell.rs` vs expected `cell.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:cell.rs` vs expected `cell.rs`
-- **Proposed provenance header:** `// port-lint: source cell.rs` (current: `// port-lint: source cell.rs`)
-- **Proposed provenance header:** `// port-lint: tests cell.rs` (current: `// port-lint: tests cell.rs`)
-- **Lint issues:** 2
 
-### 2. vt100.callbacks
+### 2. callbacks
 
-- **Target:** `vt100.Callbacks [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Callbacks`
 - **Similarity:** 0.69
 - **Dependents:** 1
 - **Priority Score:** 1001303.1
@@ -53,15 +48,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 4)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `callbacks.rs` vs expected `callbacks.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:callbacks.rs` vs expected `callbacks.rs`
-- **Proposed provenance header:** `// port-lint: source callbacks.rs` (current: `// port-lint: source callbacks.rs`)
-- **Proposed provenance header:** `// port-lint: tests callbacks.rs` (current: `// port-lint: tests callbacks.rs`)
-- **Lint issues:** 2
 
-### 3. vt100.parser
+### 3. parser
 
-- **Target:** `vt100.Parser [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Parser`
 - **Similarity:** 0.80
 - **Dependents:** 1
 - **Priority Score:** 1001102.1
@@ -69,15 +59,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `parser.rs` vs expected `parser.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:parser.rs` vs expected `parser.rs`
-- **Proposed provenance header:** `// port-lint: source parser.rs` (current: `// port-lint: source parser.rs`)
-- **Proposed provenance header:** `// port-lint: tests parser.rs` (current: `// port-lint: tests parser.rs`)
-- **Lint issues:** 2
 
-### 4. vt100.screen
+### 4. screen
 
-- **Target:** `vt100.Screen [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Screen`
 - **Similarity:** 0.89
 - **Dependents:** 0
 - **Priority Score:** 9601.1
@@ -85,15 +70,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `screen.rs` vs expected `screen.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:screen.rs` vs expected `screen.rs`
-- **Proposed provenance header:** `// port-lint: source screen.rs` (current: `// port-lint: source screen.rs`)
-- **Proposed provenance header:** `// port-lint: tests screen.rs` (current: `// port-lint: tests screen.rs`)
-- **Lint issues:** 2
 
-### 5. vt100.grid
+### 5. grid
 
-- **Target:** `grid.Grid [PROVENANCE-FALLBACK]`
+- **Target:** `grid.Grid`
 - **Similarity:** 0.82
 - **Dependents:** 0
 - **Priority Score:** 6201.8
@@ -101,15 +81,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `grid.rs` vs expected `grid.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:grid.rs` vs expected `grid.rs`
-- **Proposed provenance header:** `// port-lint: source grid.rs` (current: `// port-lint: source grid.rs`)
-- **Proposed provenance header:** `// port-lint: tests grid.rs` (current: `// port-lint: tests grid.rs`)
-- **Lint issues:** 2
 
-### 6. vt100.term
+### 6. term
 
-- **Target:** `term.Term [PROVENANCE-FALLBACK]`
+- **Target:** `term.Term`
 - **Similarity:** 0.64
 - **Dependents:** 0
 - **Priority Score:** 3003.6
@@ -117,15 +92,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 20/20 matched (target 21)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `term.rs` vs expected `term.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:term.rs` vs expected `term.rs`
-- **Proposed provenance header:** `// port-lint: source term.rs` (current: `// port-lint: source term.rs`)
-- **Proposed provenance header:** `// port-lint: tests term.rs` (current: `// port-lint: tests term.rs`)
-- **Lint issues:** 2
 
-### 7. vt100.row
+### 7. row
 
-- **Target:** `vt100.Row [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Row`
 - **Similarity:** 0.82
 - **Dependents:** 0
 - **Priority Score:** 1801.8
@@ -133,15 +103,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `row.rs` vs expected `row.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:row.rs` vs expected `row.rs`
-- **Proposed provenance header:** `// port-lint: source row.rs` (current: `// port-lint: source row.rs`)
-- **Proposed provenance header:** `// port-lint: tests row.rs` (current: `// port-lint: tests row.rs`)
-- **Lint issues:** 2
 
-### 8. vt100.attrs
+### 8. attrs
 
-- **Target:** `vt100.Attrs [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Attrs`
 - **Similarity:** 0.84
 - **Dependents:** 0
 - **Priority Score:** 1501.6
@@ -149,15 +114,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 2/2 matched (target 6)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `attrs.rs` vs expected `attrs.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:attrs.rs` vs expected `attrs.rs`
-- **Proposed provenance header:** `// port-lint: source attrs.rs` (current: `// port-lint: source attrs.rs`)
-- **Proposed provenance header:** `// port-lint: tests attrs.rs` (current: `// port-lint: tests attrs.rs`)
-- **Lint issues:** 2
 
-### 9. vt100.perform
+### 9. perform
 
-- **Target:** `vt100.Perform [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Perform`
 - **Similarity:** 0.83
 - **Dependents:** 0
 - **Priority Score:** 1101.7
@@ -165,15 +125,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `perform.rs` vs expected `perform.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:perform.rs` vs expected `perform.rs`
-- **Proposed provenance header:** `// port-lint: source perform.rs` (current: `// port-lint: source perform.rs`)
-- **Proposed provenance header:** `// port-lint: tests perform.rs` (current: `// port-lint: tests perform.rs`)
-- **Lint issues:** 2
 
-### 10. vt100.lib
+### 10. lib
 
-- **Target:** `vt100.Lib [PROVENANCE-FALLBACK]`
+- **Target:** `vt100.Lib`
 - **Similarity:** 1.00
 - **Dependents:** 0
 - **Priority Score:** 0.0
@@ -181,9 +136,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 0/0 matched (target 1)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `lib.rs` vs expected `lib.rs`
-- **Proposed provenance header:** `// port-lint: source lib.rs` (current: `// port-lint: source lib.rs`)
-- **Lint issues:** 1
 
 ## Success Criteria
 
