@@ -29,6 +29,7 @@ public enum class MouseProtocolMode {
     PressRelease,
 
     // Highlight,
+
     /**
      * Mouse button events should be reported on button press and release, as
      * well as when the mouse moves between cells while a button is held
