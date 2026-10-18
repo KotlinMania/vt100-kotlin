@@ -4,12 +4,12 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 10/10 (100.0%)
+- **Files Present:** 9/10 (90.0%)
 - **Function parity:** 245/245 matched (target 402) — 100.0%
-- **Class/type parity:** 33/33 matched (target 48) — 100.0%
-- **Combined symbol parity:** 278/278 matched (target 450) — 100.0%
-- **Average inline-code cosine:** 0.81 (function body across 10 matched files)
-- **Average documentation cosine:** 0.39 (doc text across 10 matched files)
+- **Class/type parity:** 33/33 matched (target 47) — 100.0%
+- **Combined symbol parity:** 278/278 matched (target 449) — 100.0%
+- **Average inline-code cosine:** 0.79 (function body across 9 matched files)
+- **Average documentation cosine:** 0.36 (doc text across 9 matched files)
 - **Cheat-zeroed Files:** 0
 - **Critical Issues:** 0 files with <0.60 function similarity
 
@@ -126,17 +126,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
 
-### 10. lib
-
-- **Target:** `vt100.Lib`
-- **Similarity:** 1.00
-- **Dependents:** 0
-- **Priority Score:** 0.0
-- **Functions:** 0/0 matched
-- **Missing functions:** _none_
-- **Types:** 0/0 matched (target 1)
-- **Missing types:** _none_
-
 ## Success Criteria
 
 For each file to be considered "complete":
@@ -145,4 +134,17 @@ For each file to be considered "complete":
 - All tests ported
 - Documentation ported
 - port-lint header present
+
+## Reexport / Wiring Modules
+
+These files match `reexport_modules` patterns in `.ast_distance_config.json`. They are filtered out of
+normal priority and missing-file ladders because they are wiring
+modules, not direct logic ports. Consult them for call-site routing;
+do not treat them as the next implementation target by default.
+
+### Missing
+
+| Source | Expected target | Deps | Source path | Expected path |
+|--------|-----------------|------|-------------|---------------|
+| `lib` | `Lib` | 0 | `lib.rs` | `Lib.kt` |
 
