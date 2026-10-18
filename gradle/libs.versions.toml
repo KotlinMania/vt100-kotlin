@@ -9,7 +9,7 @@ detekt = "2.0.0-alpha.6"
 ktlintEngine = "1.8.0"
 ktlint = "14.2.0"
 kotlinxBenchmark = "0.5.0"
-unicodeWidth = "0.1.1"
+unicodeWidth = "0.1.2"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
