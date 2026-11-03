@@ -5,13 +5,15 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 9/10 (90.0%)
-- **Function parity:** 245/245 matched (target 402) — 100.0%
+- **Function parity:** 265/272 matched (target 402) — 97.4%
 - **Class/type parity:** 33/33 matched (target 47) — 100.0%
-- **Combined symbol parity:** 278/278 matched (target 449) — 100.0%
-- **Average inline-code cosine:** 0.79 (function body across 9 matched files)
+- **Combined symbol parity:** 298/305 matched (target 449) — 97.7%
+- **Average inline-code cosine:** 0.26 (function body across 9 matched files)
 - **Average documentation cosine:** 0.36 (doc text across 9 matched files)
 - **Cheat-zeroed Files:** 0
-- **Critical Issues:** 0 files with <0.60 function similarity
+- **Critical Issues:** 9 files with <0.60 function similarity
+- **Needs Review:** 0 files with 0.60-0.84 function similarity
+- **Excellent:** 0 files with >=0.85 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -30,9 +32,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 1. cell
 
 - **Target:** `vt100.Cell`
-- **Similarity:** 0.76
+- **Similarity:** 0.23
 - **Dependents:** 1
-- **Priority Score:** 1002202.4
+- **Priority Score:** 1002207.8
 - **Functions:** 21/21 matched (target 38)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
@@ -41,9 +43,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 2. callbacks
 
 - **Target:** `vt100.Callbacks`
-- **Similarity:** 0.69
+- **Similarity:** 0.12
 - **Dependents:** 1
-- **Priority Score:** 1001303.1
+- **Priority Score:** 1001308.8
 - **Functions:** 12/12 matched (target 23)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 4)
@@ -52,53 +54,53 @@ Every matched file is listed below with function and type symbol parity.
 ### 3. parser
 
 - **Target:** `vt100.Parser`
-- **Similarity:** 0.80
+- **Similarity:** 0.23
 - **Dependents:** 1
-- **Priority Score:** 1001102.1
+- **Priority Score:** 1001107.7
 - **Functions:** 10/10 matched (target 20)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
 - **Missing types:** _none_
 
-### 4. screen
+### 4. term
+
+- **Target:** `term.Term`
+- **Similarity:** 0.23
+- **Dependents:** 0
+- **Priority Score:** 75707.8
+- **Functions:** 30/37 matched (target 76)
+- **Missing functions:** `new`, `new`, `new`, `new`, `new`, `new`, `new`
+- **Types:** 20/20 matched (target 21)
+- **Missing types:** _none_
+
+### 5. screen
 
 - **Target:** `vt100.Screen`
-- **Similarity:** 0.89
+- **Similarity:** 0.35
 - **Dependents:** 0
-- **Priority Score:** 9601.1
+- **Priority Score:** 9606.5
 - **Functions:** 93/93 matched (target 108)
 - **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
-### 5. grid
+### 6. grid
 
 - **Target:** `grid.Grid`
-- **Similarity:** 0.82
+- **Similarity:** 0.31
 - **Dependents:** 0
-- **Priority Score:** 6201.8
+- **Priority Score:** 6206.9
 - **Functions:** 59/59 matched (target 77)
 - **Missing functions:** _none_
 - **Types:** 3/3 matched (target 4)
 - **Missing types:** _none_
 
-### 6. term
-
-- **Target:** `term.Term`
-- **Similarity:** 0.64
-- **Dependents:** 0
-- **Priority Score:** 3003.6
-- **Functions:** 10/10 matched (target 76)
-- **Missing functions:** _none_
-- **Types:** 20/20 matched (target 21)
-- **Missing types:** _none_
-
 ### 7. row
 
 - **Target:** `vt100.Row`
-- **Similarity:** 0.82
+- **Similarity:** 0.29
 - **Dependents:** 0
-- **Priority Score:** 1801.8
+- **Priority Score:** 1807.1
 - **Functions:** 17/17 matched (target 26)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)
@@ -107,9 +109,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 8. attrs
 
 - **Target:** `vt100.Attrs`
-- **Similarity:** 0.84
+- **Similarity:** 0.21
 - **Dependents:** 0
-- **Priority Score:** 1501.6
+- **Priority Score:** 1507.9
 - **Functions:** 13/13 matched (target 18)
 - **Missing functions:** _none_
 - **Types:** 2/2 matched (target 6)
@@ -118,9 +120,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 9. perform
 
 - **Target:** `vt100.Perform`
-- **Similarity:** 0.83
+- **Similarity:** 0.33
 - **Dependents:** 0
-- **Priority Score:** 1101.7
+- **Priority Score:** 1106.7
 - **Functions:** 10/10 matched (target 16)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched (target 2)

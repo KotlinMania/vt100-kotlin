@@ -1,4 +1,4 @@
-=== Deep Analysis: tmp/vt100/src (rust) -> src/commonMain/kotlin (kotlin) ===
+=== Deep Analysis: tmp/vt100/src (rust) -> src/common/commonMain/kotlin (kotlin) ===
 
 Scanning source codebase (rust)...
 Codebase: tmp/vt100/src (rust)
@@ -7,7 +7,7 @@ Codebase: tmp/vt100/src (rust)
   Most depended: callbacks (1 dependents)
 
 Scanning target codebase (kotlin)...
-Codebase: src/commonMain/kotlin (kotlin)
+Codebase: src/common/commonMain/kotlin (kotlin)
   Files: 17
   Total imports: 61
   Most depended: vt100.Attrs (2 dependents)
@@ -18,7 +18,7 @@ Computing AST similarities...
 === Codebase Comparison Report ===
 
 Source: tmp/vt100/src (10 files)
-Target: src/commonMain/kotlin (17 files)
+Target: src/common/commonMain/kotlin (17 files)
 Scoring invariant: FnSim is required function body/parameter similarity. Class/type and symbol parity are reported beside it; whole-file shape is diagnostic only.
 
 Matched:   10 files

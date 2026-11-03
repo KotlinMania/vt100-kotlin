@@ -6,7 +6,7 @@
     "lang": "rust"
   },
   "target": {
-    "path": "src/commonMain/kotlin/io/github/kotlinmania/vt100",
+    "path": "src/common/commonMain/kotlin/io/github/kotlinmania/vt100",
     "lang": "kotlin"
   },
   "checks": {
