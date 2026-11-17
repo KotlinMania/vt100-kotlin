@@ -12,6 +12,7 @@ class ParserTest {
 
         val screen = parser.screen().copy()
         parser.process("this text is \u001b[31mRED\u001b[m")
+        assertEquals("", screen.contents())
         assertEquals(
             Color.Idx(1),
             parser.screen().cell(0, 13)?.fgcolor(),

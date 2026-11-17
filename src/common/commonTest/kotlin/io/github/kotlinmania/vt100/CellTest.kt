@@ -68,7 +68,7 @@ class CellTest {
         // The upstream guard refuses an append once the running length would
         // leave fewer than four bytes of headroom in the 22-byte buffer, so
         // we should be able to fit nine extra combining marks but not ten.
-        for (i in 0 until 12) {
+        repeat(12) {
             cell.append(0x0301)
         }
         val expected =

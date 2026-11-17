@@ -9,9 +9,9 @@ detekt = "2.0.0-alpha.6"
 ktlint = "14.2.0"
 ktlintEngine = "1.8.0"
 kotlinxBenchmark = "0.5.0"
-unicodeWidth = "0.1.2"
-serde = "0.1.11"
-serdeJson = "0.1.1"
+unicodeWidth = "0.1.3"
+serde = "0.1.12"
+serdeJson = "0.2.0"
 
 androidxTestRunner = "1.7.0"
 
@@ -40,10 +40,5 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 
 [bundles]
 vt100-commonMain = [
-  "kotlinx-coroutines-core",
-  "kotlinx-datetime",
-  "collections-immutable",
   "unicode-width",
-  "serde-kotlin",
-  "serde-json-kotlin",
 ]

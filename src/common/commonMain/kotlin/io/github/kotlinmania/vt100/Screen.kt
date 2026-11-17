@@ -209,7 +209,8 @@ public class Screen internal constructor(
                 if (startCol < endCol) {
                     rows(startCol, endCol - startCol)
                         .drop(startRow)
-                        .firstOrNull() ?: ""
+                        .firstOrNull()
+                        .orEmpty()
                 } else {
                     ""
                 }
